@@ -12,19 +12,19 @@ module.exports = {
     attributes: {
         idCurso: {
 
-            required: false,
+            required:false, 
 
             model: 'curso'
         },
         idGestionAcademica: {
 
-            required: false,
+            required:false, 
 
             model: 'gestionacademica'
         },
         idAlumno: {
 
-            required: false,
+            required:false, 
 
             model: 'alumno'
         }

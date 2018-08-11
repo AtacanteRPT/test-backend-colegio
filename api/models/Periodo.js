@@ -19,20 +19,20 @@ module.exports = {
         },
         nombre: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         hora_ini: {
             type: 'string',
             columnType: 'time',
-            required: false,
+            required:false, allowNull:true
 
         },
         hora_fin: {
             type: 'string',
             columnType: 'time',
-            required: false,
+            required:false, allowNull:true
 
         }
 

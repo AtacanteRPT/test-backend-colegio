@@ -15,7 +15,7 @@ module.exports = {
             autoIncrement: true,
         },
         idPersona: {
-            required: false,
+            required:false, 
             model: 'persona'
         }
     }

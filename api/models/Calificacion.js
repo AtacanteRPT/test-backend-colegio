@@ -11,37 +11,37 @@ module.exports = {
     attributes: {
         examen_a: {
             type: 'number',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         examen_b: {
             type: 'number',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         examen_c: {
             type: 'number',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         dps: {
             type: 'number',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         idGestionAcademica: {
 
-            required: false,
+            required:false, 
 
             model: 'gestionacademica'
         },
         idAsignatura: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -49,7 +49,7 @@ module.exports = {
         },
         idProfesor: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -57,7 +57,7 @@ module.exports = {
         },
         idAlumno: {
 
-            required: false,
+            required:false, 
 
 
 

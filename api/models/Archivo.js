@@ -10,12 +10,12 @@ module.exports = {
 
         },
         idPersona: {
-            required: false,
+            required:false, 
             model: 'persona'
         },
         direccion: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
 
         }

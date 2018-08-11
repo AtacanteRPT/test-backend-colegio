@@ -20,7 +20,7 @@ module.exports = {
       required: false
     },
     idPersona: {
-      required: false,
+      required:false, 
       model: 'persona'
     }
   }

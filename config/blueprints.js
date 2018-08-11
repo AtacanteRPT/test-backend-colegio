@@ -47,12 +47,12 @@ module.exports.blueprints = {
         // If this is the "find" or "populate" blueprint action, and the normal query options
         // indicate that the request is attempting to set an exceedingly high `limit` clause,
         // then prevent it (we'll say `limit` must not exceed 100).
-        queryOptions.criteria.limit = 1000;
-        // if (req.options.blueprintAction === 'find' || req.options.blueprintAction === 'populate') {
-        //   if (queryOptions.criteria.limit > 100) {
-        //     queryOptions.criteria.limit = 100;
-        //   }
-        // }
+        // queryOptions.criteria.limit = 1000;
+        if (req.options.blueprintAction === 'find' || req.options.blueprintAction === 'populate') {
+          
+            queryOptions.criteria.limit = 1000;
+          
+        }
       
         return queryOptions;
       

@@ -11,7 +11,7 @@ module.exports = {
     attributes: {
         idParalelo: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -19,7 +19,7 @@ module.exports = {
         },
         idTurno: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -27,7 +27,7 @@ module.exports = {
         },
         idGrado: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -35,7 +35,7 @@ module.exports = {
         },
         idGrupo: {
 
-            required: false,
+            required:false, 
 
 
 

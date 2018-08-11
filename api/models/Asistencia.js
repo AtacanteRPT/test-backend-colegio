@@ -11,31 +11,29 @@ module.exports = {
         fecha: {
             type: 'string',
             columnType: 'date',
-            required: false,
+            required:false, allowNull:true
         },
         estado: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
         },
         observacion: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
         },
         hora_llegada: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
         },
         hora_salida: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
         },
         idGestionAcademica: {
 
-            required: false,
             model: 'gestionacademica'
         },
         idPersona: {
-            required: false,
             model: 'persona'
         }
 

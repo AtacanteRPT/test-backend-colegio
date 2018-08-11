@@ -29,7 +29,7 @@ module.exports = {
         },
         codigo_qr: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
         },
         rol: {
             type: 'string',

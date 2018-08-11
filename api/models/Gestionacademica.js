@@ -19,30 +19,30 @@ module.exports = {
         },
         tipo: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         fecha_inicio: {
             type: 'string',
             columnType: 'date',
-            required: false,
+            required:false, allowNull:true
 
         },
         fecha_fin: {
             type: 'string',
             columnType: 'date',
-            required: false,
+            required:false, allowNull:true
 
         },
         horaEntrada: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
         },
         horaSalida: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
         },
     }

@@ -12,7 +12,7 @@ module.exports = {
     attributes: {
         idCurso: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -20,7 +20,7 @@ module.exports = {
         },
         idDia: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -28,7 +28,7 @@ module.exports = {
         },
         idProfesor: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -36,7 +36,7 @@ module.exports = {
         },
         idAsignatura: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -44,16 +44,14 @@ module.exports = {
         },
         idPeriodo: {
 
-            required: false,
-
+            required:false, 
 
 
             model: 'periodo'
         },
         idGestionAcademica: {
 
-            required: false,
-
+            required:false, 
 
 
             model: 'gestionacademica'

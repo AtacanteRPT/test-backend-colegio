@@ -12,7 +12,7 @@ module.exports = {
     attributes: {
         idAlumno: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -20,7 +20,7 @@ module.exports = {
         },
         idTutor: {
 
-            required: false,
+            required:false, 
 
             model: 'tutor'
         }

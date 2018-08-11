@@ -18,7 +18,7 @@ module.exports = {
         },
         nombre: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
 
         }

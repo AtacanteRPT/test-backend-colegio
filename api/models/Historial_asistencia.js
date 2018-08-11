@@ -12,19 +12,19 @@ module.exports = {
     attributes: {
         cantidad_faltas: {
             type: 'number',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         cantidad_asistencia: {
             type: 'number',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         idGestionAcademica: {
 
-            required: false,
+            required:false, 
 
 
 
@@ -32,8 +32,7 @@ module.exports = {
         },
         idPersona: {
 
-            required: false,
-
+            required:false, 
 
 
             model: 'persona'

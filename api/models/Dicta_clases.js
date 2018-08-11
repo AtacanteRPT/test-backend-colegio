@@ -12,13 +12,13 @@ module.exports = {
     attributes: {
         idProfesor: {
 
-            required: false,
+            required:false, 
 
             model: 'profesor'
         },
         idAsignatura: {
 
-            required: false,
+            required:false, 
 
             model: 'asignatura'
         }

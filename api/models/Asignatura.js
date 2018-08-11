@@ -18,13 +18,13 @@ module.exports = {
         },
         sigla: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
 
         },
         nombre: {
             type: 'string',
-            required: false,
+            required:false, allowNull:true
 
 
         }
