@@ -290,7 +290,7 @@ module.exports = {
 
     historial: function (req, res) {
 
-		sails.log(HOLA)
+		// sails.log(HOLA)
 
 		var id = req.user.idPersona;
 		
