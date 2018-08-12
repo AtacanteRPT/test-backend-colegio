@@ -41,7 +41,6 @@ module.exports = {
     crear: function (req, res) {
 
         var nuevaPersona = {
-            id: 0,
             identificacion: req.param('identificacion'),
             nombre: req.param('nombre'),
             email: req.param('email'),
@@ -59,18 +58,18 @@ module.exports = {
         }
         // sails.log("NUEVA PERSONA", nuevaPersona)
         var rol = req.param('rol');
-        Persona.create(nuevaPersona).exec(function (err, datoPersona) {
+        Persona.create(nuevaPersona).fetch().exec(function (err, datoPersona) {
             if (err) { return res.serverError(err) };
 
-            sails.log("CONTROLLER PERSONA  - ADICIONO PERSONA : ", datoPersona);
+            sails.log("CONTROLLER PERSONA  PERSONA : ", datoPersona);
             // console.log('persons : ' + datoPersona.nombre)
             switch (rol) {
                 case 'alumno':
-                    Alumno.create({ id: 0, idPersona: datoPersona.id }).exec(function (err, creado) {
+                    Alumno.create({ idPersona: datoPersona.id }).exec(function (err, creado) {
                         if (err) { return res.serverError(err); }
 
                         usuario = {
-                            id: 0,
+                        
                             username: datoPersona.id + datoPersona.nombre,
                             password: datoPersona.id + datoPersona.nombre,
                             codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
@@ -85,10 +84,10 @@ module.exports = {
                     })
                     break;
                 case 'profesor':
-                    Profesor.create({ id: 0, idPersona: datoPersona.id }).exec(function (err, creado) {
+                    Profesor.create({ idPersona: datoPersona.id }).exec(function (err, creado) {
                         if (err) { return res.serverError(err); }
                         usuario = {
-                            id: 0,
+                        
                             username: datoPersona.id + datoPersona.nombre,
                             password: datoPersona.id + datoPersona.nombre,
                             codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
@@ -103,11 +102,11 @@ module.exports = {
                     })
                     break;
                 case 'tutor':
-                    Tutor.create({ id: 0, idPersona: datoPersona.id }).exec(function (err, creado) {
+                    Tutor.create({ idPersona: datoPersona.id }).exec(function (err, creado) {
                         if (err) { return res.serverError(err); }
 
                         usuario = {
-                            id: 0,
+                        
                             username: datoPersona.id + datoPersona.nombre,
                             password: datoPersona.id + datoPersona.nombre,
                             codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
@@ -122,14 +121,15 @@ module.exports = {
                     })
                     break;
                 case 'administrativo':
-                    Administrador.create({ id: 0, idPersona: datoPersona.id, cargo: req.param('cargo') }).exec(function (err, creado) { if (err) { return res.serverError(err); } })
+                    Administrador.create({ idPersona: datoPersona.id, cargo: req.param('cargo') }).exec(function (err, creado) { if (err) { return res.serverError(err); } })
                     break;
                 default:
+                res.send({mensaje : "no fue asignado ningun rol"})
                     break;
             }
 
             // usuario = {
-            //     id: 0,
+            //    
             //     username: datoPersona.id + datoPersona.nombre,
             //     password: datoPersona.id + datoPersona.nombre,
             //     codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,

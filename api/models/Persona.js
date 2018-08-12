@@ -28,13 +28,10 @@ module.exports = {
         identificacion: {
             type: 'string',
             required:false, allowNull:true
-
-
         },
         nombre: {
             type: 'string',
             required:false, allowNull:true
-
         },
         img: {
             type: 'string',
@@ -103,9 +100,7 @@ module.exports = {
 
         },
         rol: {
-            type: 'string',
-
-
+            type: 'string'
         }
 
     }
