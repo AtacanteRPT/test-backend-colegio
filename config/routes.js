@@ -39,7 +39,13 @@ module.exports.routes = {
     'GET /curso/mostrar_turno/:id': 'CursoController.mostrar_turno',
     'GET /curso/mostrar_turno2/:id': 'CursoController.mostrar_turno2',
     
-    'GET /profesor/dicta_asignatura/:id': 'ProfesorController.dicta_asignatura'
+    'GET /profesor/dicta_asignatura/:id': 'ProfesorController.dicta_asignatura',
+
+    'GET /alumno/alumno_tutor/:id': 'AlumnoController.alumno_tutor',
+
+    'GET /pension/pension_por_tutor/:id': 'PensionController.pension_por_tutor'
+    
+
     //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
     //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
     //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
