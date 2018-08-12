@@ -15,7 +15,7 @@ module.exports = {
         Profesor.findOne({ idPersona: idProfesor }).exec((err, datoProfesor) => {
             if (err) { return res.serverError(err); }
 
-            Dicta_clases.create({ idProfesor: datoProfesor.id, idAsignatura: idAsignatura }).exec((err, datoDictaClases) => {
+            Dicta_clases.create({ idProfesor: datoProfesor.id, idAsignatura: idAsignatura }).fetch().exec((err, datoDictaClases) => {
                 if (err) { return res.serverError(err); }
 
                 res.send(datoDictaClases)

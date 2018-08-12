@@ -37,8 +37,9 @@ module.exports.routes = {
     'POST /persona/avatar/:id': 'PersonaController.subir',
 
     'GET /curso/mostrar_turno/:id': 'CursoController.mostrar_turno',
-    'GET /curso/mostrar_turno2/:id': 'CursoController.mostrar_turno2'
-
+    'GET /curso/mostrar_turno2/:id': 'CursoController.mostrar_turno2',
+    
+    'GET /profesor/dicta_asignatura/:id': 'ProfesorController.dicta_asignatura'
     //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
     //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
     //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
