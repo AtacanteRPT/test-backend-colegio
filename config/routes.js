@@ -22,7 +22,7 @@ module.exports.routes = {
      *                                                                          *
      ***************************************************************************/
     // 'GET /': { view: 'pages/homepage' },
-    'GET /alumno/alumno_tutor/:id': 'AlumnoController.alumno_tutor',
+    'GET /alumno/tutores/:id': 'AlumnoController.alumno_tutor',
 
     //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
     //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
@@ -41,7 +41,7 @@ module.exports.routes = {
     
     'GET /profesor/dicta_asignatura/:id': 'ProfesorController.dicta_asignatura',
 
-    'GET /alumno/alumno_tutor/:id': 'AlumnoController.alumno_tutor',
+    // 'GET /alumno/alumno_tutor/:id': 'AlumnoController.alumno_tutor',
 
     'GET /pension/pension_por_tutor/:id': 'PensionController.pension_por_tutor'
     

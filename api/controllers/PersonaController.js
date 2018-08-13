@@ -34,14 +34,27 @@ module.exports = {
 
     todo: function (req, res) {
 
-        return res.send(user);
+        // Persona.find().exec(function (err, datosPersona) {
+
+
+        //     datosPersona.forEach(element => {
+
+        //         if (element.rol = "tutor") {
+        //             Persona.update(element.id).set({ cedula: element.identificacion }).exec(function (err, dato) {
+
+        //             })
+        //         }
+        //     });
+
+        //     res.send("actualizando")
+        // })
     }
 
     ,
     crear: function (req, res) {
 
         var nuevaPersona = {
-            identificacion: req.param('identificacion'),
+            identificacion: req.param('cedula'),
             nombre: req.param('nombre'),
             email: req.param('email'),
             paterno: req.param('paterno'),
@@ -69,7 +82,7 @@ module.exports = {
                         if (err) { return res.serverError(err); }
 
                         usuario = {
-                        
+
                             username: datoPersona.id + datoPersona.nombre,
                             password: datoPersona.id + datoPersona.nombre,
                             codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
@@ -87,7 +100,7 @@ module.exports = {
                     Profesor.create({ idPersona: datoPersona.id }).exec(function (err, creado) {
                         if (err) { return res.serverError(err); }
                         usuario = {
-                        
+
                             username: datoPersona.id + datoPersona.nombre,
                             password: datoPersona.id + datoPersona.nombre,
                             codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
@@ -106,7 +119,7 @@ module.exports = {
                         if (err) { return res.serverError(err); }
 
                         usuario = {
-                        
+
                             username: datoPersona.id + datoPersona.nombre,
                             password: datoPersona.id + datoPersona.nombre,
                             codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
@@ -124,7 +137,7 @@ module.exports = {
                     Administrador.create({ idPersona: datoPersona.id, cargo: req.param('cargo') }).exec(function (err, creado) { if (err) { return res.serverError(err); } })
                     break;
                 default:
-                res.send({mensaje : "no fue asignado ningun rol"})
+                    res.send({ mensaje: "no fue asignado ningun rol" })
                     break;
             }
 
@@ -235,8 +248,8 @@ module.exports = {
                 app: { appAuthKey: 'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz', appId: 'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f' }
             });
 
-//             userAuthKey:'MGI1ODliM2QtYmU2NC00ZjgzLWIwM2EtOWYxNjI0NmI3MTVj',
-// app:{appAuthKey:'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz' , appId:'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f'}
+            //             userAuthKey:'MGI1ODliM2QtYmU2NC00ZjgzLWIwM2EtOWYxNjI0NmI3MTVj',
+            // app:{appAuthKey:'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz' , appId:'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f'}
 
             sails.log("DISPOSITIVOS", datosDispositivos)
 

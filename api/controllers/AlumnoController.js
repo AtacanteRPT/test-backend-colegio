@@ -66,7 +66,7 @@ module.exports = {
 
                 if (datoTutor) {
                     sails.log("AlumnoController", datoTutor);
-                    Tutor_alumno.create({ id: 0, idAlumno: datoAlumno.id, idTutor: datoTutor.id }).exec(function(err, creado) {
+                    Tutor_alumno.create({ idAlumno: datoAlumno.id, idTutor: datoTutor.id }).exec(function(err, creado) {
                         if (err) { return res.serverError(err); }
 
                         console.log('******************************')
