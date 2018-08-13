@@ -5,6 +5,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 var OneSignal = require('onesignal-node');
+var path = require('path')
 
 // var generatePassword = require('password-generator');
 var user = [{
@@ -205,7 +206,8 @@ module.exports = {
             // // var direccionBase = "http://192.241.152.146:1337"
             // var url = direccionBase + "/avatars//" + (uploadedFiles[0].fd).substring(47);
 
-            var urlFoto = (uploadedFiles[0].fd).split("/");
+            console.log("SEPARATE", path.sep)
+            var urlFoto = (uploadedFiles[0].fd).split(path.sep);
             sails.log("fotos:", urlFoto);
             var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
