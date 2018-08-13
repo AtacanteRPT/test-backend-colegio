@@ -24,16 +24,15 @@ module.exports = {
             });
         })(req, res);
     },
-    logout: function (req, res) {
+    salir: function (req, res) {
         req.logout();
-        res.redirect('/');
+        res.send({mensaje:"asi de la cuenta satisfactoriamente"});
     },
     autentificacion:function(req, res){
         var usuario={
             usuario:req.user,
             autentificacion:req.isAuthenticated()
         }
-
         res.send(usuario)
     }
 

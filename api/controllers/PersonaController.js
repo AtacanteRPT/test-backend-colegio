@@ -228,10 +228,13 @@ module.exports = {
         Dispositivo.find({ idPersona: id }).populate("idPersona").exec(function (err, datosDispositivos) {
 
             var myClient = new OneSignal.Client({
-                userAuthKey: 'NmFkNzI1MzAtOTI2MS00MzQ4LWExZDQtZjk5NWZkOWQwMjY5',
+                userAuthKey: 'MGI1ODliM2QtYmU2NC00ZjgzLWIwM2EtOWYxNjI0NmI3MTVj',
                 // note that "app" must have "appAuthKey" and "appId" keys    
-                app: { appAuthKey: 'NDRlNjYwNjItMjI0OC00YjZiLTkzMWEtMWI5MTc0M2FhNTY1', appId: 'bb416d8c-898b-4152-b863-01a7e233b7e7' }
+                app: { appAuthKey: 'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz', appId: 'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f' }
             });
+
+//             userAuthKey:'MGI1ODliM2QtYmU2NC00ZjgzLWIwM2EtOWYxNjI0NmI3MTVj',
+// app:{appAuthKey:'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz' , appId:'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f'}
 
             sails.log("DISPOSITIVOS", datosDispositivos)
 

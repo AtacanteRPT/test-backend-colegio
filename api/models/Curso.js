@@ -9,6 +9,8 @@ module.exports = {
     tableName: 'curso',
 
     attributes: {
+        updatedAt: false,
+        createdAt:false,
         idParalelo: {
 
             required:false, 

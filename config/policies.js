@@ -18,7 +18,7 @@ module.exports.policies = {
      ***************************************************************************/
 
 
-    // CursoController: {
+    // ParaleloController: {
     //     '*': ['AccesoPoliticaAlumno']
     // }
 

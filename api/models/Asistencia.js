@@ -11,7 +11,8 @@ module.exports = {
         fecha: {
             type: 'string',
             columnType: 'date',
-            required:false, allowNull:true
+            required:false, 
+            allowNull:true
         },
         estado: {
             type: 'string',

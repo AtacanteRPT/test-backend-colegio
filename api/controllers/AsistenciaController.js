@@ -50,7 +50,7 @@ var horaActual = ''
 var maxHoraLlegada = 9;
 var minsLlegada = 0;
 var minHoraSalidaT = 17;
-var minHoraSalidaM = 12;
+var minHoraSalidaM = 9;
 var minsSalida = 0;
 var hoy = new Date();
 
@@ -84,6 +84,8 @@ module.exports = {
                 }
 
                 if (datoPersona.rol == "alumno") {
+
+
                     var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = ? and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
                     Persona.query(query, [actualIdentificacion], function (err, consulta) {
                         if (err) { return res.serverError(err); }
@@ -114,7 +116,7 @@ module.exports = {
                                     estado: 'asistió',
                                     hora_llegada: horaActual,
                                     hora_salida: horaActual,
-                                    
+
                                     idGestionAcademica: 1,
                                     idPersona: resultado.idPersona
                                 }
@@ -132,7 +134,7 @@ module.exports = {
                                         img: resultado.img
                                     }
 
-                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje : " Hora Llegada : "+datoAsistencia.hora_llegada}).on('complete', function (data3, response3) {
+                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje: " Hora Llegada : " + datoAsistencia.hora_llegada }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
 
@@ -188,7 +190,7 @@ module.exports = {
                                         hora_salida: datoAsistencia[0].hora_salida
                                     }
 
-                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje : " Hora Salida : "+datoAsistencia.hora_salida}).on('complete', function (data3, response3) {
+                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
                                     });
@@ -216,7 +218,7 @@ module.exports = {
                                         hora_salida: datoAsistencia[0].hora_salida
                                     }
 
-                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje : " Hora Salida : "+datoAsistencia.hora_salida}).on('complete', function (data3, response3) {
+                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
                                     });
@@ -290,17 +292,20 @@ module.exports = {
 
     historial: function (req, res) {
 
-		// sails.log(HOLA)
+        // sails.log(HOLA)
 
-		var id = req.user.idPersona;
-		
-		var tutor = {
-			id:req.user.idPersona,
-			nombre:req.user.nombre,
-			paterno : req.user.paterno,
-			materno : req.user.materno,
-			alumnos : []
-		}
+
+        sails.log("user -asistenciaController", req.user)
+
+        var id = req.user.id;
+
+        var tutor = {
+            id: req.user.idPersona,
+            nombre: req.user.nombre,
+            paterno: req.user.paterno,
+            materno: req.user.materno,
+            alumnos: []
+        }
 
         if (req.user.rol == "alumno") {
             Asistencia.find({ where: { idPersona: id }, sort: 'fecha ASC' }).exec((err, datoAsistencias) => {
@@ -309,49 +314,90 @@ module.exports = {
             });
         }
         else if (req.user.rol == "tutor") {
- 
-			sails.log("DATO PERSONA", datoPersona)
-			
-			var tutor = {
-				id:req.user.idPersona,
-				nombre:req.user.nombre,
-				paterno : req.user.paterno,
-				materno : req.user.materno,
-				alumnos : []
-			}
+
+            sails.log("DATO PERSONA", datoPersona)
+
+            var tutor = {
+                id: req.user.idPersona,
+                nombre: req.user.nombre,
+                paterno: req.user.paterno,
+                materno: req.user.materno,
+                alumnos: []
+            }
             Tutor.findOne({ idPersona: id }).exec((err, auxTutor) => {
 
                 Tutor_alumno.find({ idTutor: auxTutor.id }).populate("idAlumno").exec((err, auxAlumnos) => {
 
-                    sails.log("+++++++++++++++++auxALumno+++++++++++++++++", auxAlumnos)					
+                    sails.log("+++++++++++++++++auxALumno+++++++++++++++++", auxAlumnos)
                     if (auxAlumno.length > 0) {
 
-						async.each(auxAlumnos, function(datoAlumno,cb){
+                        async.each(auxAlumnos, function (datoAlumno, cb) {
 
-							Persona.findOne(datoAlumno.idAlumno.idPersona).exec(function(err, datoPersona){
-								Asistencia.find({ where: { idPersona: datoAlumno.idAlumno.idPersona }, sort: 'fecha ASC' }).exec((err, datoAsistencias) => {
-									datoPersona.asistencias = datoAsistencias
-									tutor.alumnos.push(datoPersona)
-								});	
-							})
-						}, function(error){
-							res.send(tutor)
-						});
+                            Persona.findOne(datoAlumno.idAlumno.idPersona).exec(function (err, datoPersona) {
+                                Asistencia.find({ where: { idPersona: datoAlumno.idAlumno.idPersona }, sort: 'fecha ASC' }).exec((err, datoAsistencias) => {
+                                    datoPersona.asistencias = datoAsistencias
+                                    tutor.alumnos.push(datoPersona)
+                                });
+                            })
+                        }, function (error) {
+                            res.send(tutor)
+                        });
                     } else {
                         res.send(tutor)
                     }
                 });
             })
         }
-      },
+    },
 
     historial_alumno: function (req, res) {
 
-        var id = req.param('id');
+        var id = req.user.id;
+
         Asistencia.find({ where: { idPersona: id }, sort: 'fecha ASC' }).exec((err, datoAsistencias) => {
 
             res.send(datoAsistencias)
         });
+    },
+    historial_por_tutor: function (req, res) {
+
+        var id = req.user.id;
+
+        var tutor = {
+            id: req.user.idPersona,
+            nombre: req.user.nombre,
+            paterno: req.user.paterno,
+            materno: req.user.materno,
+            alumnos: []
+        }
+        Tutor.findOne({ idPersona: id }).exec((err, auxTutor) => {
+
+            Tutor_alumno.find({ idTutor: auxTutor.id }).populate("idAlumno").exec((err, auxAlumnos) => {
+
+                sails.log("+++++++++++++++++auxALumno+++++++++++++++++", auxAlumnos)
+
+                // sails.log("+++++++++++++++++LENGTH+++++++++++++++++", auxAlumno.l)
+                if (auxAlumnos.length > 0) {
+
+                    async.each(auxAlumnos, function (datoAlumno, cb) {
+
+                        Persona.findOne(datoAlumno.idAlumno.idPersona).exec(function (err, datoPersona) {
+                            sails.log("DATO PERSONA - Alumno", datoPersona)
+                            Asistencia.find({ where: { idPersona: datoPersona.id }, sort: 'fecha ASC' }).exec((err, datoAsistencias) => {
+                                datoPersona.asistencias = datoAsistencias
+                                tutor.alumnos.push(datoPersona)
+                                cb();
+                            });
+                        })
+                    }, function (error) {
+                        res.send(tutor)
+                    });
+                } else {
+
+                    res.send(tutor)
+                }
+            });
+        })
     }
 
 };

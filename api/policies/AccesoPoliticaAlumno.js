@@ -4,6 +4,7 @@ module.exports = function(req, res, next) {
     // or if this is the last policy, the controller
     if (req.isAuthenticated()) {
         if (req.user.rol == 'alumno' || req.user.rol == 'admin') {
+            console.log("politica - accesoPolitica", req.user)
             return next();
         }
 
@@ -11,5 +12,5 @@ module.exports = function(req, res, next) {
 
     // User is not allowed
     // (default res.forbidden() behavior can be overridden in `config/403.js`)
-    return res.json('no tiene permiso para esta consulta');
+    return res.json({mensaje:"No tiene acceso a la consulta"});
 };
