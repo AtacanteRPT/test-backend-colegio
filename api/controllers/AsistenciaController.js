@@ -3,11 +3,7 @@
 var moment = require('moment')
 // var baseidentificacion = ''
 var actualIdentificacion = '0'
-
-
 var rest = require('restler');
-
-
 var async = require('async');
 var auxAlumno = {
     identificacion: 0,
@@ -19,6 +15,8 @@ var auxAlumno = {
     img: "",
     tutores: []
 }
+
+require('../../configuracion')
 
 // var express = require('express'),
 //   app = express(),
@@ -134,7 +132,7 @@ module.exports = {
                                         img: resultado.img
                                     }
 
-                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje: " Hora Llegada : " + datoAsistencia.hora_llegada }).on('complete', function (data3, response3) {
+                                    rest.postJson(DOMINIO +'persona/notificar', { id: datoPersona.id, mensaje: " Hora Llegada : " + datoAsistencia.hora_llegada }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
 
@@ -190,7 +188,7 @@ module.exports = {
                                         hora_salida: datoAsistencia[0].hora_salida
                                     }
 
-                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                                    rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
                                     });
@@ -218,7 +216,7 @@ module.exports = {
                                         hora_salida: datoAsistencia[0].hora_salida
                                     }
 
-                                    rest.postJson('http://localhost:1337/persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                                    rest.postJson(DOMINIO +'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
                                     });
@@ -255,7 +253,7 @@ module.exports = {
 
                                 Persona.findOne(auxAlumno.idAlumno.idPersona).exec((err, auxPersona) => {
 
-                                    rest.postJson('http://localhost:1337/asistencia/mostrar', { baseidentificacion: auxPersona.identificacion }).on('complete', function (data2, response2) {
+                                    rest.postJson(DOMINIO +'asistencia/mostrar', { baseidentificacion: auxPersona.identificacion }).on('complete', function (data2, response2) {
                                         // handle response
                                         res.send(data2)
 

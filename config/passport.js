@@ -64,6 +64,8 @@ passport.use(new LocalStrategy({
                 //     id: user.idPersona,
                 //     rol: user.rol
                 // };
+                datoPersona.usuario = user
+
                 return cb(null, datoPersona, { message: 'Acceso satisfactoriamente' });
             })
 

@@ -175,6 +175,8 @@ module.exports = {
             maxBytes: 10000000
         }, function whenDone(err, uploadedFiles) {
 
+            sails.log("UPLOAD : ", uploadedFiles)
+
             if (err) {
                 return res.negotiate(err);
             }
@@ -190,14 +192,14 @@ module.exports = {
             // // var direccionBase = "http://192.241.152.146:1337"
             // var url = direccionBase + "/avatars//" + (uploadedFiles[0].fd).substring(47);
 
-            var urlFoto = (uploadedFiles[i].fd).split("\\");
+            var urlFoto = (uploadedFiles[0].fd).split("\\");
             sails.log("fotos:", urlFoto);
             var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
 
             Persona.update({ id: idPersona }, {
                 img: url,
-            }).exec(function (err, datoPersona) {
+            }).fetch().exec(function (err, datoPersona) {
 
                 if (err) { console.log(err); return res.negotiate(err) };
 

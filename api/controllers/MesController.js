@@ -5,8 +5,13 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+require('../../configuracion')
 module.exports = {
 
+    global : function(req,res){
+        // console.log("GLOBAL:",OSO )
+        res.send("oso")
+    },
     probar: function (req, res) {
         Pension.create(
             { 
