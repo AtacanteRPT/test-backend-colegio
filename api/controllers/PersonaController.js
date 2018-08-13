@@ -205,7 +205,7 @@ module.exports = {
             // // var direccionBase = "http://192.241.152.146:1337"
             // var url = direccionBase + "/avatars//" + (uploadedFiles[0].fd).substring(47);
 
-            var urlFoto = (uploadedFiles[0].fd).split("\\");
+            var urlFoto = (uploadedFiles[0].fd).split("/");
             sails.log("fotos:", urlFoto);
             var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
