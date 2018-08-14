@@ -271,6 +271,10 @@ module.exports = {
                     include_player_ids: listaDispositivos
                 });
 
+                firstNotification.postBody["contents"] = { "en": mensaje };
+                firstNotification.postBody["data"] = { "abc": "123", "foo": "bar" };
+                firstNotification.postBody["headings"] = { "en": datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno };
+
                 // Add a new target after creating initial notification body  
                 // firstNotification.postBody["include_player_ids"].push["3aa608f2-c6a1-11e3-851d-000c2940e62c"]
 
