@@ -16,7 +16,10 @@ module.exports = {
     },
     adicionar: function(req, res){
 
+
+
         Dispositivo.create({idDispositivo : req.param("idDispositivo"),idPersona:req.user.id}).fetch().exec(function(err, result){
+            if (err) { return res.serverError(err); }
             res.send(result)
         })
     }
