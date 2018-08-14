@@ -51,6 +51,7 @@ var minHoraSalidaT = 17;
 var minHoraSalidaM = 9;
 var minsSalida = 0;
 var hoy = new Date();
+var sw = 0;
 
 module.exports = {
 
@@ -84,8 +85,12 @@ module.exports = {
                 if (datoPersona.rol == "alumno") {
 
 
-                    var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = ? and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
-                    Persona.query(query, [actualIdentificacion], function (err, consulta) {
+                    var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = $1 and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
+                    // Persona.query(query, [actualIdentificacion], function (err, consulta) {
+
+                    sails.sendNativeQuery(query, [actualIdentificacion], function (err, result) {
+                        var consulta = result.rows;
+
                         if (err) { return res.serverError(err); }
 
                         var resultado = {}
@@ -102,7 +107,7 @@ module.exports = {
                             resultado.grupo = ''
                             sails.log('++++++++ ERROE EN CONSULTA +++++ devolviendo persona', resultado);
                         }
-                        sails.log("RESULTADO", consulta)
+                        sails.log("RESULTADO", resultado)
 
                         Asistencia.findOne({ idPersona: resultado.idPersona, fecha: fecha }).exec((err, datoAsistencia) => {
                             console.log('fechaAsistencia', datoAsistencia)
@@ -132,7 +137,7 @@ module.exports = {
                                         img: resultado.img
                                     }
 
-                                    rest.postJson(DOMINIO +'persona/notificar', { id: datoPersona.id, mensaje: " Hora Llegada : " + datoAsistencia.hora_llegada }).on('complete', function (data3, response3) {
+                                    rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Llegada : " + datoAsistencia.hora_llegada }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
 
@@ -216,7 +221,7 @@ module.exports = {
                                         hora_salida: datoAsistencia[0].hora_salida
                                     }
 
-                                    rest.postJson(DOMINIO +'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                                    rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
                                         // handle response
                                         sails.log("se enviò una notificaciòn")
                                     });
@@ -253,7 +258,7 @@ module.exports = {
 
                                 Persona.findOne(auxAlumno.idAlumno.idPersona).exec((err, auxPersona) => {
 
-                                    rest.postJson(DOMINIO +'asistencia/mostrar', { baseidentificacion: auxPersona.identificacion }).on('complete', function (data2, response2) {
+                                    rest.postJson(DOMINIO + 'asistencia/mostrar', { baseidentificacion: auxPersona.identificacion }).on('complete', function (data2, response2) {
                                         // handle response
                                         res.send(data2)
 
