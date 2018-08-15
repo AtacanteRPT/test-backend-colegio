@@ -1932,10 +1932,10 @@ module.exports = {
         req.file('avatar').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/avatars'),
-            saveAs: function(__newFileStream, cb) {
-                cb(null, __newFileStream.filename);
-            },
-            maxBytes: 10025000000
+            // saveAs: function(__newFileStream, cb) {
+            //     cb(null, __newFileStream.filename);
+            // },
+            maxBytes: 1025000000
         }, function whenDone(err, uploadedFiles) {
 
             if (err) {
