@@ -1968,7 +1968,7 @@ module.exports = {
 
                     if (err) { console.log(err); return res.negotiate(err) };
 
-                    console.log('Se adicio Foto a : ', per.identificacion)
+                    console.log('Se adicio Foto a : ', per)
                 });
 
                 // var auxCodigoFoto = "";
