@@ -1931,7 +1931,7 @@ module.exports = {
     cargarFotosAmerinst2: function(req, res) {
         req.file('avatar').upload({
             // ~10MB
-            dirname: require('path').resolve(sails.config.appPath, 'assets/avatars/nestorp'),
+            dirname: require('path').resolve(sails.config.appPath, 'assets/avatars/'),
             saveAs: function(__newFileStream, cb) {
                 cb(null, __newFileStream.filename);
             },
@@ -1953,9 +1953,9 @@ module.exports = {
                     // var nombreFoto = file.filename.substring(4, 8) + "";
 
                 // sails.log('Persona - Identificacion', "*" + persona.identificacion + "*")
-                var urlFoto = (uploadedFiles[i].fd).split("\\");
+                var urlFoto = (uploadedFiles[i].fd).split(path.sep);
                 sails.log("fotos:", urlFoto);
-                var url = "avatars/nestorp//" + urlFoto[urlFoto.length - 1]
+                var url = "avatars/" + urlFoto[urlFoto.length - 1]
 
 
                 Persona.update({
@@ -1964,7 +1964,7 @@ module.exports = {
                     //     { codigoFoto: nombreFoto }
                     // ]
                     codigoFoto: nombreFoto
-                }, { img: url }).exec(function(err, per) {
+                }, { img: url }).fetch().exec(function(err, per) {
 
                     if (err) { console.log(err); return res.negotiate(err) };
 
