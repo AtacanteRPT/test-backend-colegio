@@ -112,7 +112,7 @@ module.exports = {
                         Asistencia.findOne({ idPersona: resultado.idPersona, fecha: fecha }).exec((err, datoAsistencia) => {
                             console.log('fechaAsistencia', datoAsistencia)
 
-                            if (datoAsistencia == null) {
+                            if (datoAsistencia == null ) {
                                 console.log('paso 2 creando nuevo')
                                 Asistencia.create({
                                     fecha: fecha,
@@ -124,7 +124,7 @@ module.exports = {
                                     idPersona: resultado.idPersona
                                 }
 
-                                ).exec((err, datoAsistencia) => {
+                                ).fetch().exec((err, datoAsistencia) => {
                                     if (err) { return res.serverError(err); }
 
                                     auxAlumno = {
@@ -178,7 +178,7 @@ module.exports = {
 
                                 Asistencia.update({ idPersona: resultado.idPersona, fecha: fecha }, {
                                     hora_salida: horaActual
-                                }).exec((err, datoAsistencia) => {
+                                }).fecth().exec((err, datoAsistencia) => {
                                     console.log('actualizado', datoAsistencia)
 
                                     auxAlumno = {
@@ -206,7 +206,7 @@ module.exports = {
 
                                 Asistencia.update({ idPersona: resultado.idPersona, fecha: fecha }, {
                                     hora_salida: horaActual
-                                }).exec((err, datoAsistencia) => {
+                                }).fecth().exec((err, datoAsistencia) => {
                                     console.log('actualizado', datoAsistencia)
 
                                     auxAlumno = {
