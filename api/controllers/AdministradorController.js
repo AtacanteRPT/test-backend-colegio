@@ -53,6 +53,35 @@ function recortarNombre(estudiante1) {
     return auxPersona;
 }
 
+function recortarNombre2(estudiante1) {
+
+    var auxPersona = {};
+    var nombreCompletoEstudiante = estudiante1.split(" ");
+
+    auxPersona.paterno = nombreCompletoEstudiante[0]
+    auxPersona.materno = nombreCompletoEstudiante[1]
+
+    if (nombreCompletoEstudiante.length == 3) {
+        auxPersona.nombre = nombreCompletoEstudiante[2]
+    } else if (nombreCompletoEstudiante.length == 4) {
+        auxPersona.nombre = nombreCompletoEstudiante[2] + " " + nombreCompletoEstudiante[3]
+    } else {
+        var auxNombre = "";
+        for (var index = 2; index < nombreCompletoEstudiante.length; index++) {
+
+            if (index + 1 == nombreCompletoEstudiante.length) {
+                auxNombre = auxNombre + nombreCompletoEstudiante[index]
+            } else {
+                auxNombre = auxNombre + nombreCompletoEstudiante[index] + " "
+            }
+
+        }
+        auxPersona.nombre = auxNombre;
+    }
+    sails.log("auxpersona: ", auxPersona)
+    return auxPersona;
+}
+
 
 // function adicionar_tutor_alumno(tutor, alumno) {
 
@@ -70,7 +99,7 @@ function recortarNombre(estudiante1) {
 // }
 function adicionar_tutor_alumno(tutor, alumno) {
 
-    rest.postJson('http://localhost:1337/alumno/adicionar_tutor', { idTutor: tutor.id, idAlumno: alumno.id }).on('complete', function(data2, response2) {
+    rest.postJson('http://localhost:1337/alumno/adicionar_tutor', { idTutor: tutor.id, idAlumno: alumno.id }).on('complete', function (data2, response2) {
         // handle response
         console.log('tutor adicionado', data2)
         sails.log("---------------ADICIONADO TUTOR con exito--------------------")
@@ -100,7 +129,7 @@ function adicionar_tutor_alumno(tutor, alumno) {
 
 module.exports = {
 
-    actualizarPadres: function(req, res) {
+    actualizarPadres: function (req, res) {
         var csvFilePath = '../.././assets/cvs/kinder-prekinder_amerinst_tarde.csv'
 
         var nuevasPersonas = [];
@@ -114,7 +143,7 @@ module.exports = {
 
         var nro = 10166;
 
-        async.eachSeries(nuevasPersonas, function(persona, callback) {
+        async.eachSeries(nuevasPersonas, function (persona, callback) {
 
 
 
@@ -135,7 +164,7 @@ module.exports = {
 
                 var auxIdentificacion = nro + tutor.paterno.charAt(0) + tutor.materno.charAt(0) + tutor.nombre.charAt(0)
 
-                Persona.update(tutor, { identificacion: auxIdentificacion }).exec(function(err, datoPersona) {
+                Persona.update(tutor, { identificacion: auxIdentificacion }).exec(function (err, datoPersona) {
                     sails.log(datoPersona)
                     nro++;
                     callback(null);
@@ -168,7 +197,7 @@ module.exports = {
 
 
 
-        }, function(error) {
+        }, function (error) {
 
             sails.log("-------------------FINAL LISTA -----------------------")
 
@@ -177,7 +206,7 @@ module.exports = {
         res.send('NADA')
 
     },
-    adicionarPersonas: function(req, res) {
+    adicionarPersonas: function (req, res) {
 
         var csvFilePath = '../.././assets/cvs/kinder-prekinder_amerinst_tarde.csv'
 
@@ -192,7 +221,7 @@ module.exports = {
 
         var nro = 10166;
 
-        async.eachSeries(nuevasPersonas, function(persona, callback) {
+        async.eachSeries(nuevasPersonas, function (persona, callback) {
 
 
 
@@ -212,16 +241,16 @@ module.exports = {
                 }
 
                 tutor.identificacion = nro + tutor.paterno.charAt(0) + tutor.materno.charAt(0) + tutor.nombre.charAt(0)
-                rest.postJson('http://localhost:1337/api/persona', tutor).on('complete', function(data, response) {
+                rest.postJson('http://localhost:1337/api/persona', tutor).on('complete', function (data, response) {
                     // handle response
                     console.log('Persona Creada', data)
 
                     if (persona.codigoFoto.length > 0) {
 
-                        Persona.findOne({ identificacion: persona.codigoFoto }).exec(function(err, datoALumno) {
+                        Persona.findOne({ identificacion: persona.codigoFoto }).exec(function (err, datoALumno) {
 
                             sails.log("personaEncontrada:", datoALumno)
-                            rest.postJson('http://localhost:1337/alumno/adicionar_tutor', { idTutor: data.id, idAlumno: datoALumno.id }).on('complete', function(data2, response2) {
+                            rest.postJson('http://localhost:1337/alumno/adicionar_tutor', { idTutor: data.id, idAlumno: datoALumno.id }).on('complete', function (data2, response2) {
                                 // handle response
                                 console.log('tutor adicionado', data2)
 
@@ -239,7 +268,7 @@ module.exports = {
 
 
 
-        }, function(error) {
+        }, function (error) {
 
             sails.log("-------------------FINAL LISTA -----------------------")
 
@@ -248,7 +277,7 @@ module.exports = {
         res.send('NADA')
 
     },
-    adicionarPersonasNestorP: function(req, res) {
+    adicionarPersonasNestorP: function (req, res) {
 
         var files = [];
 
@@ -322,7 +351,7 @@ module.exports = {
 
         files.push('../.././assets/cvs/amerinst/kinder-prekinder_amerinst_tarde_faltantes.csv');
 
-        async.eachSeries(files, function(file, callback) {
+        async.eachSeries(files, function (file, callback) {
 
             sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -336,18 +365,18 @@ module.exports = {
 
             nuevasPersonas = csvjson.toObject(dato, options);
 
-            async.each(nuevasPersonas, function(persona, cb) {
+            async.each(nuevasPersonas, function (persona, cb) {
                 // nuevasPersonas.forEach(function (persona) {
                 if (persona.paterno.length > 0) {
 
                     persona.rol = "alumno"
 
                     // identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
-                    rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
+                    rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function (data, response) {
                         // handle response
                         console.log('Persona Creada', data)
                         if (persona.idCurso.length > 0) {
-                            rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function(data2, response2) {
+                            rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function (data2, response2) {
                                 // handle response
                                 console.log('inscrito Creada', data2)
 
@@ -372,25 +401,25 @@ module.exports = {
 
 
                 // }, this);
-            }, function(error) {
+            }, function (error) {
 
                 sails.log("-------------------FINAL LISTA -----------------------")
                 callback(null);
                 // return res.send("tutores")
             });
 
-        }, function(error) {
+        }, function (error) {
 
         });
         res.send('NADA')
     },
-    adicionarPersonasAmerinst: function(req, res) {
+    adicionarPersonasAmerinst: function (req, res) {
 
         var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/nestorPeñaranda'),
-            saveAs: function(__newFileStream, cb) {
+            saveAs: function (__newFileStream, cb) {
                 cb(null, "TM" + __newFileStream.filename);
             },
             maxBytes: 10000000
@@ -406,7 +435,7 @@ module.exports = {
             }
 
 
-            async.eachSeries(uploadedFiles, function(file, callback) {
+            async.eachSeries(uploadedFiles, function (file, callback) {
 
                 sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
@@ -421,7 +450,7 @@ module.exports = {
 
                 nuevasPersonas = csvjson.toObject(dato, options);
 
-                async.each(nuevasPersonas, function(persona, cb) {
+                async.each(nuevasPersonas, function (persona, cb) {
 
                     // nuevasPersonas.forEach(function (persona) {
                     if (persona.Estudiante.length > 0) {
@@ -451,12 +480,12 @@ module.exports = {
 
                         persona.rol = "alumno"
                         sails.log("Persona desde el CSV", persona)
-                            // identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
-                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
+                        // identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
+                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function (data, response) {
                             // handle response
                             console.log('Persona Creada', data)
                             if (persona.idCurso.length > 0) {
-                                rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function(data2, response2) {
+                                rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function (data2, response2) {
                                     // handle response
                                     console.log('inscrito Creada', data2)
 
@@ -482,16 +511,16 @@ module.exports = {
 
 
                     // }, this);
-                }, function(error) {
+                }, function (error) {
 
                     sails.log("-------------------FINAL LISTA -----------------------")
                     callback(null);
                     // return res.send("tutores")
                 });
 
-            }, function(error) {
-                rest.get('http://localhost:1337/administrador/actualizarIdentificaciones').on('complete', function(data2, response2) {
-                    rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + req.param("idCurso")).on('complete', function(data, response) {
+            }, function (error) {
+                rest.get('http://localhost:1337/administrador/actualizarIdentificaciones').on('complete', function (data2, response2) {
+                    rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + req.param("idCurso")).on('complete', function (data, response) {
                         // handle response
                         res.send("TODO A ACABADO")
 
@@ -507,13 +536,13 @@ module.exports = {
 
     },
 
-    adicionarPersonasDomingoSavio: function(req, res) {
+    adicionarPersonasDomingoSavio: function (req, res) {
 
         var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/DomingoSavio'),
-            saveAs: function(__newFileStream, cb) {
+            saveAs: function (__newFileStream, cb) {
                 cb(null, "TT" + __newFileStream.filename);
             },
             maxBytes: 10000000
@@ -529,7 +558,7 @@ module.exports = {
             }
 
             var cursoId = 1;
-            async.eachSeries(uploadedFiles, function(file, callback) {
+            async.eachSeries(uploadedFiles, function (file, callback) {
 
                 sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
@@ -544,7 +573,7 @@ module.exports = {
 
                 nuevasPersonas = csvjson.toObject(dato, options);
 
-                async.each(nuevasPersonas, function(persona, cb) {
+                async.each(nuevasPersonas, function (persona, cb) {
 
                     // nuevasPersonas.forEach(function (persona) {
                     if (persona.nombre.length > 0) {
@@ -558,12 +587,12 @@ module.exports = {
                         sails.log("Persona desde el CSV", persona)
                         cursoId = persona.idCurso;
                         var identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
-                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
+                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function (data, response) {
                             // handle response
                             console.log('Persona Creada', data)
                             if (persona.idCurso.length > 0) {
 
-                                rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function(data2, response2) {
+                                rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function (data2, response2) {
                                     // handle response
                                     console.log('inscrito Creada', data2)
 
@@ -653,17 +682,17 @@ module.exports = {
 
 
                     // }, this);
-                }, function(error) {
+                }, function (error) {
 
                     sails.log("-------------------FINAL LISTA -----------------------")
                     callback(null);
                     // return res.send("tutores")
                 });
 
-            }, function(error) {
+            }, function (error) {
 
-                rest.get('http://localhost:1337/administrador/actualizarIdentificaciones').on('complete', function(data2, response2) {
-                    rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + index).on('complete', function(data, response) {
+                rest.get('http://localhost:1337/administrador/actualizarIdentificaciones').on('complete', function (data2, response2) {
+                    rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + index).on('complete', function (data, response) {
                         // handle response
                         res.send("TODO A ACABADO")
 
@@ -682,13 +711,13 @@ module.exports = {
 
     },
 
-    adicionarPersonasDomingoSavioAutomatico: function(req, res) {
+    adicionarPersonasDomingoSavioAutomatico: function (req, res) {
 
         var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/DomingoSavio'),
-            saveAs: function(__newFileStream, cb) {
+            saveAs: function (__newFileStream, cb) {
                 cb(null, "TT" + __newFileStream.filename);
             },
             maxBytes: 10000000
@@ -704,7 +733,7 @@ module.exports = {
             }
 
             var cursoId = 1;
-            async.eachSeries(uploadedFiles, function(file, callback) {
+            async.eachSeries(uploadedFiles, function (file, callback) {
 
                 sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
@@ -721,7 +750,7 @@ module.exports = {
 
 
 
-                async.each(nuevasPersonas, function(persona, cb) {
+                async.each(nuevasPersonas, function (persona, cb) {
 
                     // nuevasPersonas.forEach(function (persona) {
                     if (persona.nombre.length > 0) {
@@ -735,12 +764,12 @@ module.exports = {
                         sails.log("Persona desde el CSV", persona)
                         cursoId = persona.idCurso;
                         var identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0)
-                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
+                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function (data, response) {
                             // handle response
                             console.log('Persona Creada', data)
                             if (persona.idCurso.length > 0) {
 
-                                rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function(data2, response2) {
+                                rest.postJson('http://localhost:1337/inscribe/inscribir', { id: data.id, idCurso: persona.idCurso, idGestionAcademica: 1 }).on('complete', function (data2, response2) {
                                     // handle response
                                     console.log('inscrito Creada', data2)
 
@@ -749,7 +778,7 @@ module.exports = {
                             }
 
 
-                            Persona.update(data.id, { identificacion: data.id + "-" + identificacion }).exec(function(err, datoALumno) {
+                            Persona.update(data.id, { identificacion: data.id + "-" + identificacion }).exec(function (err, datoALumno) {
 
                                 sails.log("personaEncontrada:", datoALumno)
 
@@ -763,9 +792,9 @@ module.exports = {
 
 
                     // }, this);
-                }, function(error) {
+                }, function (error) {
 
-                    rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + cursoId).on('complete', function(data, response) {
+                    rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + cursoId).on('complete', function (data, response) {
                         // handle response
                         console.log("Creado codigos QR para ", cursoId)
 
@@ -775,7 +804,7 @@ module.exports = {
                     // return res.send("tutores")
                 });
 
-            }, function(error) {
+            }, function (error) {
 
 
 
@@ -791,9 +820,9 @@ module.exports = {
 
     },
 
-    generarCodigosDomingoSavio: function(req, res) {
+    generarCodigosDomingoSavio: function (req, res) {
         for (var index = 1; index <= 27; index++) {
-            rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + index).on('complete', function(data, response) {
+            rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + index).on('complete', function (data, response) {
                 // handle respons
 
             });
@@ -802,7 +831,7 @@ module.exports = {
     },
 
 
-    adicionarAdminFab: function(req, res) {
+    adicionarAdminFab: function (req, res) {
 
         var csvFilePath = '../.././assets/cvs/administrativosFab_2.csv'
 
@@ -815,7 +844,7 @@ module.exports = {
 
         nuevasPersonas = csvjson.toObject(dato, options);
 
-        async.each(nuevasPersonas, function(persona, cb) {
+        async.each(nuevasPersonas, function (persona, cb) {
             var materno = persona.materno + " " + persona.materno2
             if (persona.paterno.length > 0) {
                 persona.rol = "administrativo"
@@ -823,21 +852,21 @@ module.exports = {
                 persona.materno = materno;
             }
 
-            rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
+            rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function (data, response) {
                 sails.log("CREANDO:", data)
                 cb();
             });
 
-        }, function(error) {
+        }, function (error) {
 
             return res.send("tutores")
         });
 
     },
-    generarCodigosQrFab: function(req, res) {
-        Persona.find({ id: { '>=': 169 } }).exec(function(err, personas) {
+    generarCodigosQrFab: function (req, res) {
+        Persona.find({ id: { '>=': 169 } }).exec(function (err, personas) {
 
-            personas.forEach(function(persona) {
+            personas.forEach(function (persona) {
                 var codigoQr = persona.identificacion + '$2018$' + 'Unidad Educativa TCNL.RAFAEL PABON FAB'
                 var code = qr.image(codigoQr, { type: 'png' });
                 var output = fs.createWriteStream(path.join(__dirname, '../.././assets/codigos/' + persona.nro + '.jpg'))
@@ -845,12 +874,12 @@ module.exports = {
             }, this);
         })
     },
-    generarCodigosQrNestor: function(req, res) {
-        Persona.find().exec(function(err, persona) {
+    generarCodigosQrNestor: function (req, res) {
+        Persona.find().exec(function (err, persona) {
 
         })
     },
-    generarCodigosQr: function(req, res) {
+    generarCodigosQr: function (req, res) {
 
         // Persona.find().exec((err, personas) => {
 
@@ -888,7 +917,7 @@ module.exports = {
         nuevasPersonas = csvjson.toObject(data, options);
 
         var contador = 10166;
-        nuevasPersonas.forEach(function(persona) {
+        nuevasPersonas.forEach(function (persona) {
 
             if (persona.tpaterno.length > 0) {
                 var tutor = {
@@ -898,8 +927,8 @@ module.exports = {
                 }
 
                 console.log("Alumno", persona)
-                    // persona.identificacion = persona.codigoFoto ==> prekinder amerinst turno tarde
-                    // persona.identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
+                // persona.identificacion = persona.codigoFoto ==> prekinder amerinst turno tarde
+                // persona.identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
                 tutor.identificacion = contador + tutor.paterno.charAt(0) + tutor.materno.charAt(0) + tutor.nombre.charAt(0)
 
                 // var codigoQr = persona.identificacion + '$2018@' + ' Unidad Educativa TCNL.RAFAEL PABON FAB'
@@ -927,19 +956,19 @@ module.exports = {
         res.send('nada')
 
     },
-    actualizarIdentificaciones: function(req, res) {
-        Persona.find().exec(function(err, personas) {
+    actualizarIdentificaciones: function (req, res) {
+        Persona.find().exec(function (err, personas) {
 
-            async.forEach(personas, function(persona, cb) {
+            async.forEach(personas, function (persona, cb) {
 
                 Persona.update(persona.id).set({
-                        identificacion: persona.id + "-" + persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0)
-                    }
+                    identificacion: persona.id + "-" + persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0)
+                }
 
-                ).exec(function(err, datoPersona) {
+                ).exec(function (err, datoPersona) {
                     cb();
                 })
-            }, function(error) {
+            }, function (error) {
 
                 if (error) return res.negotiate(error);
 
@@ -948,16 +977,16 @@ module.exports = {
 
         });
     },
-    alumnosCursoQr: function(req, res) {
+    alumnosCursoQr: function (req, res) {
 
         var curso = req.param('id')
-        Inscribe.find({ idCurso: curso }).populate('idAlumno').populate('idCurso').exec(function(err, inscripciones) {
+        Inscribe.find({ idCurso: curso }).populate('idAlumno').populate('idCurso').exec(function (err, inscripciones) {
 
-            Curso.findOne(curso).populate('idTurno').populate('idGrado').populate('idGrupo').populate('idParalelo').exec(function(err, datoCurso) {
+            Curso.findOne(curso).populate('idTurno').populate('idGrado').populate('idGrupo').populate('idParalelo').exec(function (err, datoCurso) {
                 var alumnosCurso = [];
-                async.forEach(inscripciones, function(inscripcion, cb) {
+                async.forEach(inscripciones, function (inscripcion, cb) {
 
-                    Persona.findOne(inscripcion.idAlumno.idPersona).exec(function(err, alumno) {
+                    Persona.findOne(inscripcion.idAlumno.idPersona).exec(function (err, alumno) {
 
                         // var codigoQr = alumno.identificacion + '$2018$' + 'Instituto Americano Nestor Peñaranda'
                         var codigoQr = alumno.identificacion + '$2018$' + 'Colegio Domingo Savio '
@@ -974,7 +1003,7 @@ module.exports = {
                         code.pipe(output);
                         cb();
                     })
-                }, function(error) {
+                }, function (error) {
 
                     if (error) return res.negotiate(error);
                     sails.log("tamaño", inscripciones.length)
@@ -987,7 +1016,7 @@ module.exports = {
         })
 
     },
-    cargarFotos: function(req, res) {
+    cargarFotos: function (req, res) {
 
         req.file('avatar').upload({
             // ~10MB
@@ -1016,7 +1045,7 @@ module.exports = {
             nuevasPersonas = csvjson.toObject(data, options);
 
             var contador = 1;
-            nuevasPersonas.forEach(function(persona) {
+            nuevasPersonas.forEach(function (persona) {
 
                 if (persona.cedula.length > 0) {
                     persona.identificacion = persona.cedula
@@ -1025,9 +1054,9 @@ module.exports = {
                 }
 
                 var direccionBase = "http://localhost:1337"
-                    // var direccionBase = "http://192.241.152.146:1337"
+                // var direccionBase = "http://192.241.152.146:1337"
 
-                uploadedFiles.forEach(function(file, i) {
+                uploadedFiles.forEach(function (file, i) {
 
                     var nombreFoto = file.filename.substring(4, 8);
                     sails.log('NOMBRE FOTO: ', nombreFoto)
@@ -1038,12 +1067,12 @@ module.exports = {
 
                         sails.log('Persona - Identificacion', "*" + persona.identificacion + "*")
                         var url = direccionBase + "/avatars//" + (uploadedFiles[i].fd).substring(47);
-                        Persona.findOne({ identificacion: persona.identificacion }).exec(function(err, datoPersona) {
+                        Persona.findOne({ identificacion: persona.identificacion }).exec(function (err, datoPersona) {
                             if (err) { console.log(err); return res.negotiate(err) };
 
                             console.log('ID PERSONA : ', datoPersona)
 
-                            Persona.update({ id: datoPersona.id }, { img: url }).exec(function(err, per) {
+                            Persona.update({ id: datoPersona.id }, { img: url }).exec(function (err, per) {
 
                                 if (err) { console.log(err); return res.negotiate(err) };
 
@@ -1071,7 +1100,7 @@ module.exports = {
         });
 
     },
-    cargarFotosAmerinst: function(req, res) {
+    cargarFotosAmerinst: function (req, res) {
         req.file('avatar').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/avatars'),
@@ -1088,11 +1117,11 @@ module.exports = {
             }
 
 
-            Persona.find({ id: { '>=': 204 } }).exec(function(err, personas) {
+            Persona.find({ id: { '>=': 204 } }).exec(function (err, personas) {
 
-                async.forEach(personas, function(persona, cb) {
+                async.forEach(personas, function (persona, cb) {
 
-                    uploadedFiles.forEach(function(file, i) {
+                    uploadedFiles.forEach(function (file, i) {
                         // var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
                         var nombreFoto = file.filename.substring(4, 8) + "";
 
@@ -1117,7 +1146,7 @@ module.exports = {
                             var url = "avatars//" + nombreFoto[nombreFoto.length - 1]
 
 
-                            Persona.update(persona.id, { img: url }).exec(function(err, per) {
+                            Persona.update(persona.id, { img: url }).exec(function (err, per) {
 
                                 if (err) { console.log(err); return res.negotiate(err) };
 
@@ -1128,7 +1157,7 @@ module.exports = {
 
                     }, this);
 
-                }, function(error) {
+                }, function (error) {
 
                     if (error) return res.negotiate(error);
 
@@ -1138,13 +1167,13 @@ module.exports = {
             });
         });
     },
-    cargarTutoresAmerinst: function(req, res) {
+    cargarTutoresAmerinst: function (req, res) {
 
         var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/amerinst/padres'),
-            saveAs: function(__newFileStream, cb) {
+            saveAs: function (__newFileStream, cb) {
                 cb(null, "TT" + __newFileStream.filename);
             },
             maxBytes: 10000000
@@ -1160,165 +1189,165 @@ module.exports = {
             }
 
 
-            async.eachSeries(uploadedFiles, function(file, callback) {
+            async.eachSeries(uploadedFiles, function (file, callback) {
 
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-                    sails.log(file)
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                    var nuevasPersonas = [];
-                    var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
-                    var options = {
-                        delimiter: ',', // optional
-                        quote: '"' // optional
-                    };
+                sails.log(file)
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
+                var options = {
+                    delimiter: ',', // optional
+                    quote: '"' // optional
+                };
 
-                    nuevasPersonas = csvjson.toObject(dato, options);
+                nuevasPersonas = csvjson.toObject(dato, options);
 
-                    async.each(nuevasPersonas, function(persona, cb) {
+                async.each(nuevasPersonas, function (persona, cb) {
 
-                            // nuevasPersonas.forEach(function (persona) {
-                            var estudiante1 = persona["Student 1"]
-                            var estudiante2 = persona["Student 2"]
-                            var estudiante3 = persona["Student 3"]
+                    // nuevasPersonas.forEach(function (persona) {
+                    var estudiante1 = persona["Student 1"]
+                    var estudiante2 = persona["Student 2"]
+                    var estudiante3 = persona["Student 3"]
 
-                            var responsable1 = persona["Resp 1"]
-                            var responsable2 = persona["Resp 2"]
-                            var responsable3 = persona["Resp 3"]
+                    var responsable1 = persona["Resp 1"]
+                    var responsable2 = persona["Resp 2"]
+                    var responsable3 = persona["Resp 3"]
 
-                            var auxTutor = {}
+                    var auxTutor = {}
 
-                            if (responsable1.length > 0) {
+                    if (responsable1.length > 0) {
 
-                                auxTutor = recortarNombre(responsable1)
+                        auxTutor = recortarNombre(responsable1)
+                        auxTutor.rol = "tutor"
+                        auxTutor.nro = persona["Nº"]
+
+                        sails.log("auxpersona - 2: ", auxTutor)
+
+                        rest.postJson('http://localhost:1337/api/persona', auxTutor).on('complete', function (data1, response) {
+                            // handle response
+
+                            sails.log("/////////////////////////////////////")
+                            if (responsable2.length > 0) {
+                                auxTutor = recortarNombre(responsable2)
                                 auxTutor.rol = "tutor"
                                 auxTutor.nro = persona["Nº"]
-
-                                sails.log("auxpersona - 2: ", auxTutor)
-
-                                rest.postJson('http://localhost:1337/api/persona', auxTutor).on('complete', function(data1, response) {
+                                rest.postJson('http://localhost:1337/api/persona', auxTutor).on('complete', function (data2, response) {
                                     // handle response
-
-                                    sails.log("/////////////////////////////////////")
-                                    if (responsable2.length > 0) {
-                                        auxTutor = recortarNombre(responsable2)
+                                    if (responsable3.length > 0) {
+                                        auxTutor = recortarNombre(responsable3)
                                         auxTutor.rol = "tutor"
                                         auxTutor.nro = persona["Nº"]
-                                        rest.postJson('http://localhost:1337/api/persona', auxTutor).on('complete', function(data2, response) {
+                                        rest.postJson('http://localhost:1337/api/persona', auxTutor).on('complete', function (data3, response) {
                                             // handle response
-                                            if (responsable3.length > 0) {
-                                                auxTutor = recortarNombre(responsable3)
-                                                auxTutor.rol = "tutor"
-                                                auxTutor.nro = persona["Nº"]
-                                                rest.postJson('http://localhost:1337/api/persona', auxTutor).on('complete', function(data3, response) {
-                                                    // handle response
 
-                                                    adicionar_tutor_alumno(data1, estudiante1);
-                                                    adicionar_tutor_alumno(data2, estudiante1);
-                                                    adicionar_tutor_alumno(data3, estudiante1);
+                                            adicionar_tutor_alumno(data1, estudiante1);
+                                            adicionar_tutor_alumno(data2, estudiante1);
+                                            adicionar_tutor_alumno(data3, estudiante1);
 
-                                                    if (estudiante2.length > 0) {
-                                                        adicionar_tutor_alumno(data1, estudiante2)
-                                                        adicionar_tutor_alumno(data2, estudiante2);
-                                                        adicionar_tutor_alumno(data3, estudiante2);
-                                                    }
-                                                    if (estudiante3.length > 0) {
-                                                        adicionar_tutor_alumno(data1, estudiante3)
-                                                        adicionar_tutor_alumno(data2, estudiante3);
-                                                        adicionar_tutor_alumno(data3, estudiante3);
-                                                    }
-                                                    cb();
+                                            if (estudiante2.length > 0) {
+                                                adicionar_tutor_alumno(data1, estudiante2)
+                                                adicionar_tutor_alumno(data2, estudiante2);
+                                                adicionar_tutor_alumno(data3, estudiante2);
+                                            }
+                                            if (estudiante3.length > 0) {
+                                                adicionar_tutor_alumno(data1, estudiante3)
+                                                adicionar_tutor_alumno(data2, estudiante3);
+                                                adicionar_tutor_alumno(data3, estudiante3);
+                                            }
+                                            cb();
 
-                                                    Persona.update(data3.id).set({
-                                                            identificacion: data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0)
-                                                        }
-
-                                                    ).exec(function(err, datoPersona) {
-
-                                                    })
-
-                                                });
-                                            } else {
-
-                                                adicionar_tutor_alumno(data1, estudiante1);
-                                                adicionar_tutor_alumno(data2, estudiante1);
-
-                                                if (estudiante2.length > 0) {
-                                                    adicionar_tutor_alumno(data1, estudiante2)
-                                                    adicionar_tutor_alumno(data2, estudiante2);
-                                                }
-                                                if (estudiante3.length > 0) {
-                                                    adicionar_tutor_alumno(data1, estudiante3)
-                                                    adicionar_tutor_alumno(data2, estudiante3);
-                                                }
-                                                cb();
+                                            Persona.update(data3.id).set({
+                                                identificacion: data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0)
                                             }
 
-                                            Persona.update(data2.id).set({
-                                                    identificacion: data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0)
-                                                }
-
-                                            ).exec(function(err, datoPersona) {
+                                            ).exec(function (err, datoPersona) {
 
                                             })
-
-
-
 
                                         });
                                     } else {
 
                                         adicionar_tutor_alumno(data1, estudiante1);
-
+                                        adicionar_tutor_alumno(data2, estudiante1);
 
                                         if (estudiante2.length > 0) {
                                             adicionar_tutor_alumno(data1, estudiante2)
-
+                                            adicionar_tutor_alumno(data2, estudiante2);
                                         }
                                         if (estudiante3.length > 0) {
                                             adicionar_tutor_alumno(data1, estudiante3)
-
+                                            adicionar_tutor_alumno(data2, estudiante3);
                                         }
                                         cb();
-
                                     }
 
+                                    Persona.update(data2.id).set({
+                                        identificacion: data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0)
+                                    }
 
-                                    Persona.update(data1.id).set({
-                                            identificacion: data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0)
-                                        }
-
-                                    ).exec(function(err, datoPersona) {
+                                    ).exec(function (err, datoPersona) {
 
                                     })
 
-                                    // var codigoQr = alumno.identificacion + '$2018$' + 'Instituto Americano Nestor Peñaranda'
-                                    var codigoQr = data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0) + '$2018$' + 'Instituto Americano'
-                                    var code = qr.image(codigoQr, { type: 'png' });
 
-                                    var dir = './assets/codigos/amerinst_turno_tarde/padres/' + file.filename + "/"
-                                    if (!fs.existsSync(dir)) {
-                                        fs.mkdirSync(dir);
-                                    }
-                                    var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + data1.nro + '.jpg'))
-                                    code.pipe(output);
+
 
                                 });
                             } else {
+
+                                adicionar_tutor_alumno(data1, estudiante1);
+
+
+                                if (estudiante2.length > 0) {
+                                    adicionar_tutor_alumno(data1, estudiante2)
+
+                                }
+                                if (estudiante3.length > 0) {
+                                    adicionar_tutor_alumno(data1, estudiante3)
+
+                                }
                                 cb();
+
                             }
 
-                            // }, this);
-                        },
-                        function(error) {
 
-                            sails.log("-------------------FINAL LISTA -----------------------")
-                            callback(null);
-                            // return res.send("tutores")
+                            Persona.update(data1.id).set({
+                                identificacion: data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0)
+                            }
+
+                            ).exec(function (err, datoPersona) {
+
+                            })
+
+                            // var codigoQr = alumno.identificacion + '$2018$' + 'Instituto Americano Nestor Peñaranda'
+                            var codigoQr = data1.id + "-" + data1.paterno.charAt(0) + data1.materno.charAt(0) + data1.nombre.charAt(0) + '$2018$' + 'Instituto Americano'
+                            var code = qr.image(codigoQr, { type: 'png' });
+
+                            var dir = './assets/codigos/amerinst_turno_tarde/padres/' + file.filename + "/"
+                            if (!fs.existsSync(dir)) {
+                                fs.mkdirSync(dir);
+                            }
+                            var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + data1.nro + '.jpg'))
+                            code.pipe(output);
+
                         });
+                    } else {
+                        cb();
+                    }
 
+                    // }, this);
                 },
-                function(error) {
+                    function (error) {
+
+                        sails.log("-------------------FINAL LISTA -----------------------")
+                        callback(null);
+                        // return res.send("tutores")
+                    });
+
+            },
+                function (error) {
                     res.send("fin")
                 });
 
@@ -1328,8 +1357,8 @@ module.exports = {
 
 
     },
-    fotosFaltantesNestor: function(req, res) {
-        Persona.find({ codigoFoto: "" }).exec(function(err, datosPersona) {
+    fotosFaltantesNestor: function (req, res) {
+        Persona.find({ codigoFoto: "" }).exec(function (err, datosPersona) {
 
 
             console.log("faltan un total de ", datosPersona.length)
@@ -1347,13 +1376,13 @@ module.exports = {
 
         // })
     },
-    actualizarFotosNestor: function(req, res) {
+    actualizarFotosNestor: function (req, res) {
 
         var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/amerinst/padres'),
-            saveAs: function(__newFileStream, cb) {
+            saveAs: function (__newFileStream, cb) {
                 cb(null, "borrar" + __newFileStream.filename);
             },
             maxBytes: 10000000
@@ -1369,76 +1398,76 @@ module.exports = {
             }
 
 
-            async.eachSeries(uploadedFiles, function(file, callback) {
+            async.eachSeries(uploadedFiles, function (file, callback) {
 
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-                    sails.log(file)
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                    var nuevasPersonas = [];
-                    var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
-                    var options = {
-                        delimiter: '|', // optional
-                        quote: '"' // optional
-                    };
+                sails.log(file)
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
+                var options = {
+                    delimiter: '|', // optional
+                    quote: '"' // optional
+                };
 
-                    nuevasPersonas = csvjson.toObject(dato, options);
+                nuevasPersonas = csvjson.toObject(dato, options);
 
-                    async.each(nuevasPersonas, function(persona, cb) {
+                async.each(nuevasPersonas, function (persona, cb) {
 
 
-                            if (persona.Estudiante.length > 0) {
-                                var nombreCompleto = persona.Estudiante.split(" ");
-                                persona.paterno = nombreCompleto[0]
-                                persona.materno = nombreCompleto[1]
-                                if (nombreCompleto.length == 3) {
-                                    persona.nombre = nombreCompleto[2]
-                                } else if (nombreCompleto.length == 4) {
-                                    persona.nombre = nombreCompleto[2] + " " + nombreCompleto[3]
-                                } else {
-                                    var auxNombre = "";
-                                    for (var index = 2; index < nombreCompleto.length; index++) {
-                                        auxNombre = auxNombre + " " + nombreCompleto[index]
-                                    }
-                                    persona.nombre = auxNombre;
+                    if (persona.Estudiante.length > 0) {
+                        var nombreCompleto = persona.Estudiante.split(" ");
+                        persona.paterno = nombreCompleto[0]
+                        persona.materno = nombreCompleto[1]
+                        if (nombreCompleto.length == 3) {
+                            persona.nombre = nombreCompleto[2]
+                        } else if (nombreCompleto.length == 4) {
+                            persona.nombre = nombreCompleto[2] + " " + nombreCompleto[3]
+                        } else {
+                            var auxNombre = "";
+                            for (var index = 2; index < nombreCompleto.length; index++) {
+                                auxNombre = auxNombre + " " + nombreCompleto[index]
+                            }
+                            persona.nombre = auxNombre;
+                        }
+
+                        Persona.findOne({
+                            paterno: persona.paterno,
+                            materno: persona.materno,
+                            nombre: persona.nombre
+                        }).exec(function (err, datoPersona) {
+                            if (datoPersona != undefined) {
+
+                                if (datoPersona.codigoFoto = "") {
+
+                                    Persona.update(datoPersona.id, { codigoFoto: persona.Código }).exec(function (err, actualizado) {
+                                        sails.log("ACTUALIZADO", datoPersona)
+
+                                    })
                                 }
 
-                                Persona.findOne({
-                                    paterno: persona.paterno,
-                                    materno: persona.materno,
-                                    nombre: persona.nombre
-                                }).exec(function(err, datoPersona) {
-                                    if (datoPersona != undefined) {
-
-                                        if (datoPersona.codigoFoto = "") {
-
-                                            Persona.update(datoPersona.id, { codigoFoto: persona.Código }).exec(function(err, actualizado) {
-                                                sails.log("ACTUALIZADO", datoPersona)
-
-                                            })
-                                        }
-
-                                    }
-
-                                    cb();
-
-                                })
-                            } else {
-                                cb();
                             }
 
+                            cb();
 
-                            // }, this);
-                        },
-                        function(error) {
+                        })
+                    } else {
+                        cb();
+                    }
 
-                            sails.log("-------------------FINAL LISTA -----------------------")
-                            callback(null);
-                            // return res.send("tutores")
-                        });
 
+                    // }, this);
                 },
-                function(error) {
+                    function (error) {
+
+                        sails.log("-------------------FINAL LISTA -----------------------")
+                        callback(null);
+                        // return res.send("tutores")
+                    });
+
+            },
+                function (error) {
                     res.send("fin")
                 });
 
@@ -1448,14 +1477,14 @@ module.exports = {
 
 
     },
-    codigosTutoresDomingoSavio2: function(req, res) {},
-    cargarTutoresNestorP: function(req, res) {
+    codigosTutoresDomingoSavio2: function (req, res) { },
+    cargarTutoresNestorP: function (req, res) {
 
         var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/nestorPeñaranda/padres'),
-            saveAs: function(__newFileStream, cb) {
+            saveAs: function (__newFileStream, cb) {
                 cb(null, "TT_domingo" + __newFileStream.filename);
             },
             maxBytes: 10000000
@@ -1471,277 +1500,277 @@ module.exports = {
             }
 
 
-            async.eachSeries(uploadedFiles, function(file, callback) {
+            async.eachSeries(uploadedFiles, function (file, callback) {
 
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-                    sails.log(file)
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                    var nuevasPersonas = [];
-                    var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
-                    var options = {
-                        delimiter: ',', // optional
-                        quote: '"' // optional
-                    };
+                sails.log(file)
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
+                var options = {
+                    delimiter: ',', // optional
+                    quote: '"' // optional
+                };
 
-                    var auxPadre = {
-                        nombre: "nombre",
-                        paterno: "paterno",
-                        materno: "materno",
-                        identificacion: "identificacion",
-                        expedido: "expedido",
-                        rol: "rol",
-                        num: "num",
-                        numero: "numero"
+                var auxPadre = {
+                    nombre: "nombre",
+                    paterno: "paterno",
+                    materno: "materno",
+                    identificacion: "identificacion",
+                    expedido: "expedido",
+                    rol: "rol",
+                    num: "num",
+                    numero: "numero"
 
-                    }
-                    nuevasPersonas = csvjson.toObject(dato, options);
+                }
+                nuevasPersonas = csvjson.toObject(dato, options);
 
-                    var listaNuevaTutores1 = [];
-                    var listaNuevaTutores2 = [];
-                    var listaNuevaTutores3 = [];
-                    var listaNuevaTutores4 = [];
+                var listaNuevaTutores1 = [];
+                var listaNuevaTutores2 = [];
+                var listaNuevaTutores3 = [];
+                var listaNuevaTutores4 = [];
 
-                    listaNuevaTutores1.push(auxPadre)
-                    listaNuevaTutores2.push(auxPadre)
-                    listaNuevaTutores3.push(auxPadre)
-                    listaNuevaTutores4.push(auxPadre)
-                    var a = 1,
-                        b = 1,
-                        c = 1,
-                        d = 1;
-                    async.eachSeries(nuevasPersonas, function(persona, cb) {
-
-
-                            var estudiante = {}
-                            estudiante.nombre = persona.nombre
-                            estudiante.paterno = persona.paterno
-                            estudiante.materno = persona.materno
-                            estudiante.nro = persona.nro
-
-                            Persona.findOne(estudiante).exec(function(err, datoEstudiante) {
-
-                                if (datoEstudiante != undefined) {
-
-                                    async.series([
-                                        function(callb) {
+                listaNuevaTutores1.push(auxPadre)
+                listaNuevaTutores2.push(auxPadre)
+                listaNuevaTutores3.push(auxPadre)
+                listaNuevaTutores4.push(auxPadre)
+                var a = 1,
+                    b = 1,
+                    c = 1,
+                    d = 1;
+                async.eachSeries(nuevasPersonas, function (persona, cb) {
 
 
-                                            if (persona.ci_tutor1.length > 0) {
+                    var estudiante = {}
+                    estudiante.nombre = persona.nombre
+                    estudiante.paterno = persona.paterno
+                    estudiante.materno = persona.materno
+                    estudiante.nro = persona.nro
 
-                                                var tutor1 = recortarNombre(persona.tutor1);
-                                                tutor1.identificacion = persona.ci_tutor1
-                                                tutor1.expedido = persona.extencion1;
-                                                tutor1.rol = "tutor"
-                                                tutor1.nro = persona.nro;
-                                                tutor1.numero = a++;
+                    Persona.findOne(estudiante).exec(function (err, datoEstudiante) {
 
-                                                Persona.findOne({ identificacion: tutor1.identificacion })
-                                                    .exec(function(err, datoTutor1) {
+                        if (datoEstudiante != undefined) {
 
-                                                        if (datoTutor1 == undefined) {
+                            async.series([
+                                function (callb) {
 
-                                                            listaNuevaTutores1.push(tutor1)
-                                                            rest.postJson('http://localhost:1337/api/persona', tutor1).on('complete', function(data1, response2) {
-                                                                // handle response
-                                                                console.log('tutor adicionado', data1)
-                                                                console.log("CREADO -----", data1)
-                                                                adicionar_tutor_alumno(data1, datoEstudiante)
 
-                                                            });
+                                    if (persona.ci_tutor1.length > 0) {
 
-                                                        } else {
-                                                            console.log("ENCONTRADO ++++++", datoTutor1)
-                                                            adicionar_tutor_alumno(datoTutor1, datoEstudiante);
-                                                        }
-                                                        console.log("@@@@@@@@@@ 1111 @@@@@@@@@@")
-                                                        callb(null);
+                                        var tutor1 = recortarNombre(persona.tutor1);
+                                        tutor1.identificacion = persona.ci_tutor1
+                                        tutor1.expedido = persona.extencion1;
+                                        tutor1.rol = "tutor"
+                                        tutor1.nro = persona.nro;
+                                        tutor1.numero = a++;
+
+                                        Persona.findOne({ identificacion: tutor1.identificacion })
+                                            .exec(function (err, datoTutor1) {
+
+                                                if (datoTutor1 == undefined) {
+
+                                                    listaNuevaTutores1.push(tutor1)
+                                                    rest.postJson('http://localhost:1337/api/persona', tutor1).on('complete', function (data1, response2) {
+                                                        // handle response
+                                                        console.log('tutor adicionado', data1)
+                                                        console.log("CREADO -----", data1)
+                                                        adicionar_tutor_alumno(data1, datoEstudiante)
 
                                                     });
-                                            } else {
+
+                                                } else {
+                                                    console.log("ENCONTRADO ++++++", datoTutor1)
+                                                    adicionar_tutor_alumno(datoTutor1, datoEstudiante);
+                                                }
+                                                console.log("@@@@@@@@@@ 1111 @@@@@@@@@@")
                                                 callb(null);
-                                            }
 
-                                        },
-                                        function(callb) {
-                                            if (persona.ci_tutor2.length > 0) {
+                                            });
+                                    } else {
+                                        callb(null);
+                                    }
 
-                                                var tutor2 = recortarNombre(persona.tutor2);
-                                                tutor2.identificacion = persona.ci_tutor2
-                                                tutor2.expedido = persona.extencion2;
-                                                tutor2.rol = "tutor"
-                                                tutor2.nro = persona.nro;
-                                                tutor2.numero = b++;
+                                },
+                                function (callb) {
+                                    if (persona.ci_tutor2.length > 0) {
 
-                                                Persona.findOne({ identificacion: tutor2.identificacion })
-                                                    .exec(function(err, datoTutor2) {
+                                        var tutor2 = recortarNombre(persona.tutor2);
+                                        tutor2.identificacion = persona.ci_tutor2
+                                        tutor2.expedido = persona.extencion2;
+                                        tutor2.rol = "tutor"
+                                        tutor2.nro = persona.nro;
+                                        tutor2.numero = b++;
 
-                                                        if (datoTutor2 == undefined) {
-                                                            listaNuevaTutores2.push(tutor2)
+                                        Persona.findOne({ identificacion: tutor2.identificacion })
+                                            .exec(function (err, datoTutor2) {
 
-                                                            rest.postJson('http://localhost:1337/api/persona', tutor2).on('complete', function(data2, response2) {
-                                                                // handle response
-                                                                console.log('tutor adicionado', data2)
-                                                                console.log("CREADO -----", data2)
-                                                                adicionar_tutor_alumno(data2, datoEstudiante)
+                                                if (datoTutor2 == undefined) {
+                                                    listaNuevaTutores2.push(tutor2)
 
-                                                            });
+                                                    rest.postJson('http://localhost:1337/api/persona', tutor2).on('complete', function (data2, response2) {
+                                                        // handle response
+                                                        console.log('tutor adicionado', data2)
+                                                        console.log("CREADO -----", data2)
+                                                        adicionar_tutor_alumno(data2, datoEstudiante)
 
-                                                        } else {
-                                                            console.log("ENCONTRADO ++++++", datoTutor2)
-                                                            adicionar_tutor_alumno(datoTutor2, datoEstudiante);
-                                                        }
-                                                        console.log("@@@@@@@@@@ 2222 @@@@@@@@@@")
-                                                        callb(null);
                                                     });
-                                            } else {
+
+                                                } else {
+                                                    console.log("ENCONTRADO ++++++", datoTutor2)
+                                                    adicionar_tutor_alumno(datoTutor2, datoEstudiante);
+                                                }
+                                                console.log("@@@@@@@@@@ 2222 @@@@@@@@@@")
                                                 callb(null);
-                                            }
+                                            });
+                                    } else {
+                                        callb(null);
+                                    }
 
-                                        },
-                                        function(callb) {
-                                            if (persona.ci_tutor3.length > 0) {
+                                },
+                                function (callb) {
+                                    if (persona.ci_tutor3.length > 0) {
 
-                                                var tutor3 = recortarNombre(persona.tutor3);
-                                                tutor3.identificacion = persona.ci_tutor3
-                                                tutor3.expedido = persona.extencion3;
-                                                tutor3.rol = "tutor"
-                                                tutor3.nro = persona.nro;
-                                                tutor3.numero = c++;
+                                        var tutor3 = recortarNombre(persona.tutor3);
+                                        tutor3.identificacion = persona.ci_tutor3
+                                        tutor3.expedido = persona.extencion3;
+                                        tutor3.rol = "tutor"
+                                        tutor3.nro = persona.nro;
+                                        tutor3.numero = c++;
 
-                                                Persona.findOne({ identificacion: tutor3.identificacion })
-                                                    .exec(function(err, datoTutor3) {
-                                                        if (datoTutor3 == undefined) {
-                                                            listaNuevaTutores3.push(tutor3)
-                                                            rest.postJson('http://localhost:1337/api/persona', tutor3).on('complete', function(data3, response2) {
-                                                                // handle response
-                                                                console.log('tutor adicionado', data3)
-                                                                console.log("CREADO -----", data3)
-                                                                adicionar_tutor_alumno(data3, datoEstudiante)
+                                        Persona.findOne({ identificacion: tutor3.identificacion })
+                                            .exec(function (err, datoTutor3) {
+                                                if (datoTutor3 == undefined) {
+                                                    listaNuevaTutores3.push(tutor3)
+                                                    rest.postJson('http://localhost:1337/api/persona', tutor3).on('complete', function (data3, response2) {
+                                                        // handle response
+                                                        console.log('tutor adicionado', data3)
+                                                        console.log("CREADO -----", data3)
+                                                        adicionar_tutor_alumno(data3, datoEstudiante)
 
-                                                            });
-
-                                                        } else {
-                                                            console.log("ENCONTRADO ++++++", datoTutor3)
-                                                            adicionar_tutor_alumno(datoTutor3, datoEstudiante);
-                                                        }
-                                                        console.log("@@@@@@@@@@ 3333 @@@@@@@@@@")
-                                                        callb(null);
                                                     });
-                                            } else {
+
+                                                } else {
+                                                    console.log("ENCONTRADO ++++++", datoTutor3)
+                                                    adicionar_tutor_alumno(datoTutor3, datoEstudiante);
+                                                }
+                                                console.log("@@@@@@@@@@ 3333 @@@@@@@@@@")
                                                 callb(null);
-                                            }
+                                            });
+                                    } else {
+                                        callb(null);
+                                    }
 
-                                        },
-                                        function(callb) {
+                                },
+                                function (callb) {
 
-                                            if (persona.ci_tutor4.length > 0) {
+                                    if (persona.ci_tutor4.length > 0) {
 
-                                                var tutor4 = recortarNombre(persona.tutor4);
-                                                tutor4.identificacion = persona.ci_tutor4
-                                                tutor4.expedido = persona.extencion4;
-                                                tutor4.rol = "tutor"
-                                                tutor4.nro = persona.nro;
-                                                tutor4.numero = d++;
+                                        var tutor4 = recortarNombre(persona.tutor4);
+                                        tutor4.identificacion = persona.ci_tutor4
+                                        tutor4.expedido = persona.extencion4;
+                                        tutor4.rol = "tutor"
+                                        tutor4.nro = persona.nro;
+                                        tutor4.numero = d++;
 
-                                                Persona.findOne({ identificacion: tutor4.identificacion })
-                                                    .exec(function(err, datoTutor4) {
-                                                        if (datoTutor4 == undefined) {
-                                                            listaNuevaTutores4.push(tutor4)
-                                                            rest.postJson('http://localhost:1337/api/persona', tutor4).on('complete', function(data4, response2) {
-                                                                // handle response
-                                                                console.log('tutor adicionado', data4)
-                                                                console.log("CREADO -----", data4)
-                                                                adicionar_tutor_alumno(data4, datoEstudiante)
+                                        Persona.findOne({ identificacion: tutor4.identificacion })
+                                            .exec(function (err, datoTutor4) {
+                                                if (datoTutor4 == undefined) {
+                                                    listaNuevaTutores4.push(tutor4)
+                                                    rest.postJson('http://localhost:1337/api/persona', tutor4).on('complete', function (data4, response2) {
+                                                        // handle response
+                                                        console.log('tutor adicionado', data4)
+                                                        console.log("CREADO -----", data4)
+                                                        adicionar_tutor_alumno(data4, datoEstudiante)
 
-                                                            });
-
-                                                        } else {
-                                                            console.log("ENCONTRADO ++++++", datoTutor4)
-                                                            adicionar_tutor_alumno(datoTutor4, datoEstudiante);
-
-                                                        }
-                                                        console.log("@@@@@@@@@@ 4444 @@@@@@@@@@")
-                                                        callb(null);
                                                     });
-                                            } else {
+
+                                                } else {
+                                                    console.log("ENCONTRADO ++++++", datoTutor4)
+                                                    adicionar_tutor_alumno(datoTutor4, datoEstudiante);
+
+                                                }
+                                                console.log("@@@@@@@@@@ 4444 @@@@@@@@@@")
                                                 callb(null);
-                                            }
+                                            });
+                                    } else {
+                                        callb(null);
+                                    }
 
 
-                                        }
-                                    ], function(err, results) {
-                                        // optional callback
-                                        sails.log(" LISTA TUTORES ")
-                                        cb();
-                                    });
-
-                                } else {
-                                    cb();
                                 }
+                            ], function (err, results) {
+                                // optional callback
+                                sails.log(" LISTA TUTORES ")
+                                cb();
+                            });
 
-                            })
+                        } else {
+                            cb();
+                        }
 
-                            // }, this);
-                        },
-                        function(error) {
-                            if (listaNuevaTutores1.length > 1) {
-                                stringify(listaNuevaTutores1, function(err, output) {
-                                    fs.writeFile("d_tutores_1" + file.filename, output, 'utf8', function(err) {
-                                        if (err) {
-                                            console.log('Some error occured - file either not saved or corrupted file saved.');
-                                        } else {
-                                            console.log('It\'s saved!');
-                                        }
-                                    });
-                                });
-                            }
+                    })
 
-                            if (listaNuevaTutores2.length > 1) {
-                                stringify(listaNuevaTutores2, function(err, output) {
-                                    fs.writeFile("d_tutores_2" + file.filename, output, 'utf8', function(err) {
-                                        if (err) {
-                                            console.log('Some error occured - file either not saved or corrupted file saved.');
-                                        } else {
-                                            console.log('It\'s saved!');
-                                        }
-                                    });
-                                });
-                            }
-
-                            if (listaNuevaTutores3.length > 1) {
-                                stringify(listaNuevaTutores3, function(err, output) {
-                                    fs.writeFile("d_tutores_3" + file.filename, output, 'utf8', function(err) {
-                                        if (err) {
-                                            console.log('Some error occured - file either not saved or corrupted file saved.');
-                                        } else {
-                                            console.log('It\'s saved!');
-                                        }
-                                    });
-                                });
-                            }
-
-                            if (listaNuevaTutores4.length > 1) {
-                                stringify(listaNuevaTutores4, function(err, output) {
-                                    fs.writeFile("d_tutores_4" + file.filename, output, 'utf8', function(err) {
-                                        if (err) {
-                                            console.log('Some error occured - file either not saved or corrupted file saved.');
-                                        } else {
-                                            console.log('It\'s saved!');
-                                        }
-                                    });
-                                });
-                            }
-
-
-
-                            sails.log("-------------------FINAL LISTA -----------------------")
-                            callback(null);
-                            // return res.send("tutores")
-                        });
-
+                    // }, this);
                 },
-                function(error) {
+                    function (error) {
+                        if (listaNuevaTutores1.length > 1) {
+                            stringify(listaNuevaTutores1, function (err, output) {
+                                fs.writeFile("d_tutores_1" + file.filename, output, 'utf8', function (err) {
+                                    if (err) {
+                                        console.log('Some error occured - file either not saved or corrupted file saved.');
+                                    } else {
+                                        console.log('It\'s saved!');
+                                    }
+                                });
+                            });
+                        }
+
+                        if (listaNuevaTutores2.length > 1) {
+                            stringify(listaNuevaTutores2, function (err, output) {
+                                fs.writeFile("d_tutores_2" + file.filename, output, 'utf8', function (err) {
+                                    if (err) {
+                                        console.log('Some error occured - file either not saved or corrupted file saved.');
+                                    } else {
+                                        console.log('It\'s saved!');
+                                    }
+                                });
+                            });
+                        }
+
+                        if (listaNuevaTutores3.length > 1) {
+                            stringify(listaNuevaTutores3, function (err, output) {
+                                fs.writeFile("d_tutores_3" + file.filename, output, 'utf8', function (err) {
+                                    if (err) {
+                                        console.log('Some error occured - file either not saved or corrupted file saved.');
+                                    } else {
+                                        console.log('It\'s saved!');
+                                    }
+                                });
+                            });
+                        }
+
+                        if (listaNuevaTutores4.length > 1) {
+                            stringify(listaNuevaTutores4, function (err, output) {
+                                fs.writeFile("d_tutores_4" + file.filename, output, 'utf8', function (err) {
+                                    if (err) {
+                                        console.log('Some error occured - file either not saved or corrupted file saved.');
+                                    } else {
+                                        console.log('It\'s saved!');
+                                    }
+                                });
+                            });
+                        }
+
+
+
+                        sails.log("-------------------FINAL LISTA -----------------------")
+                        callback(null);
+                        // return res.send("tutores")
+                    });
+
+            },
+                function (error) {
                     // res.send("fin")
                 });
 
@@ -1752,13 +1781,13 @@ module.exports = {
 
 
     },
-    codigosDomingo: function(req, res) {
+    codigosDomingo: function (req, res) {
 
         var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/nestorPeñaranda/padres'),
-            saveAs: function(__newFileStream, cb) {
+            saveAs: function (__newFileStream, cb) {
                 cb(null, "TT" + __newFileStream.filename);
             },
             maxBytes: 10000000
@@ -1774,148 +1803,148 @@ module.exports = {
             }
 
 
-            async.eachSeries(uploadedFiles, function(file, callback) {
+            async.eachSeries(uploadedFiles, function (file, callback) {
 
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-                    sails.log(file)
-                    sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                    var nuevasPersonas = [];
-                    var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
-                    var options = {
-                        delimiter: ',', // optional
-                        quote: '"' // optional
-                    };
+                sails.log(file)
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
+                var options = {
+                    delimiter: ',', // optional
+                    quote: '"' // optional
+                };
 
-                    nuevasPersonas = csvjson.toObject(dato, options);
-                    var a = 1
-
-
-                    var listaPrincipal = [];
-                    listaPrincipal.push({
-
-                        nombreTutor: "nombreTutor",
-                        cedula: "cedula",
-                        estudiante1: "estudiante1",
-                        estudiante2: "estudiante2",
-                        estudiante3: "estudiante3",
-                        estudiante4: "estudiante4",
-                        estudiante5: "estudiante5",
-                        numeroQr: "numeroQr"
-                    })
+                nuevasPersonas = csvjson.toObject(dato, options);
+                var a = 1
 
 
-                    async.eachSeries(nuevasPersonas, function(persona, cb) {
+                var listaPrincipal = [];
+                listaPrincipal.push({
+
+                    nombreTutor: "nombreTutor",
+                    cedula: "cedula",
+                    estudiante1: "estudiante1",
+                    estudiante2: "estudiante2",
+                    estudiante3: "estudiante3",
+                    estudiante4: "estudiante4",
+                    estudiante5: "estudiante5",
+                    numeroQr: "numeroQr"
+                })
 
 
-                            var auxLista = {
-                                nombreTutor: persona.nombre + " " + persona.paterno + " " + persona.materno,
-                                cedula: persona.identificacion
-                            }
+                async.eachSeries(nuevasPersonas, function (persona, cb) {
 
 
-                            Persona.findOne({
-                                identificacion: persona.identificacion,
-                                rol: "tutor"
-
-                            }).exec(function(err, datoTutor) {
-
+                    var auxLista = {
+                        nombreTutor: persona.nombre + " " + persona.paterno + " " + persona.materno,
+                        cedula: persona.identificacion
+                    }
 
 
-                                if (err) { return res.serverError(err); }
+                    Persona.findOne({
+                        identificacion: persona.identificacion,
+                        rol: "tutor"
 
-                                console.log("DATO TUTOR ENCONTRADO:", datoTutor);
-
-                                if (datoTutor != undefined) {
-                                    Tutor.findOne({ idPersona: datoTutor.id }).exec(function(err, tutorDato) {
+                    }).exec(function (err, datoTutor) {
 
 
-                                        Tutor_alumno.find({
-                                            where: { idTutor: tutorDato.id }
 
-                                        }).exec(function(err, datoTutor_alumno) {
+                        if (err) { return res.serverError(err); }
+
+                        console.log("DATO TUTOR ENCONTRADO:", datoTutor);
+
+                        if (datoTutor != undefined) {
+                            Tutor.findOne({ idPersona: datoTutor.id }).exec(function (err, tutorDato) {
+
+
+                                Tutor_alumno.find({
+                                    where: { idTutor: tutorDato.id }
+
+                                }).exec(function (err, datoTutor_alumno) {
+                                    if (err) { return res.serverError(err); }
+
+                                    var alumnos = [];
+
+                                    async.forEach(datoTutor_alumno, function (auxAlumno, cb1) {
+                                        Alumno.findOne({ id: auxAlumno.idAlumno }).populate('idPersona').exec(function (err, datoAlumno) {
                                             if (err) { return res.serverError(err); }
 
-                                            var alumnos = [];
+                                            // console.log(datoAlumno)
+                                            alumnos.push(datoAlumno.idPersona);
+                                            cb1();
+                                        });
 
-                                            async.forEach(datoTutor_alumno, function(auxAlumno, cb1) {
-                                                Alumno.findOne({ id: auxAlumno.idAlumno }).populate('idPersona').exec(function(err, datoAlumno) {
-                                                    if (err) { return res.serverError(err); }
+                                    }, function (error) {
 
-                                                    // console.log(datoAlumno)
-                                                    alumnos.push(datoAlumno.idPersona);
-                                                    cb1();
-                                                });
-
-                                            }, function(error) {
-
-                                                if (error) return res.negotiate(error);
+                                        if (error) return res.negotiate(error);
 
 
-                                                sails.log("TAMAÑO alumnos", alumnos.length);
+                                        sails.log("TAMAÑO alumnos", alumnos.length);
 
-                                                sails.log("alumnos", alumnos);
-                                                alumnos.forEach(function(element, i) {
+                                        sails.log("alumnos", alumnos);
+                                        alumnos.forEach(function (element, i) {
 
-                                                    // auxLista["estudiante" + (i + 1)] = element.nombre + " " + element.paterno + " " + element.materno
-                                                    auxLista["estudiante" + (i + 1)] = element.nombre + " " + element.paterno + " " + element.materno
+                                            // auxLista["estudiante" + (i + 1)] = element.nombre + " " + element.paterno + " " + element.materno
+                                            auxLista["estudiante" + (i + 1)] = element.nombre + " " + element.paterno + " " + element.materno
 
-                                                }, this);
+                                        }, this);
 
-                                                auxLista.numeroQr = a;
-                                                a++;
+                                        auxLista.numeroQr = a;
+                                        a++;
 
-                                                sails.log("AUXLISTA.numeroQR", auxLista.numeroQr);
-                                                listaPrincipal.push(auxLista);
-
-
-                                                var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
-                                                var code = qr.image(codigoQr, { type: 'png' });
-                                                var dir = './assets/codigos/domingo_savio/padres_turnoTarde/' + file.filename.split(".")[0] + "/"
-                                                if (!fs.existsSync(dir)) {
-                                                    fs.mkdirSync(dir);
-                                                }
-                                                var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
-
-                                                code.pipe(output);
+                                        sails.log("AUXLISTA.numeroQR", auxLista.numeroQr);
+                                        listaPrincipal.push(auxLista);
 
 
-                                                // }, this);
-                                                cb();
-                                            });
+                                        var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                                        var code = qr.image(codigoQr, { type: 'png' });
+                                        var dir = './assets/codigos/domingo_savio/padres_turnoTarde/' + file.filename.split(".")[0] + "/"
+                                        if (!fs.existsSync(dir)) {
+                                            fs.mkdirSync(dir);
+                                        }
+                                        var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
 
-                                        })
+                                        code.pipe(output);
 
-                                    })
-                                } else {
-                                    cb();
-                                }
+
+                                        // }, this);
+                                        cb();
+                                    });
+
+                                })
+
+                            })
+                        } else {
+                            cb();
+                        }
 
 
 
 
-                            });
+                    });
 
-
-                        },
-                        function(error) {
-
-                            stringify(listaPrincipal, function(err, output) {
-                                fs.writeFile(file.filename, output, 'utf8', function(err) {
-                                    if (err) {
-                                        console.log('Some error occured - file either not saved or corrupted file saved.');
-                                    } else {
-                                        console.log('It\'s saved!');
-                                    }
-                                });
-                            });
-                            sails.log("-------------------FINAL LISTA -----------------------")
-                            callback(null);
-                            // return res.send("tutores")
-                        });
 
                 },
-                function(error) {
+                    function (error) {
+
+                        stringify(listaPrincipal, function (err, output) {
+                            fs.writeFile(file.filename, output, 'utf8', function (err) {
+                                if (err) {
+                                    console.log('Some error occured - file either not saved or corrupted file saved.');
+                                } else {
+                                    console.log('It\'s saved!');
+                                }
+                            });
+                        });
+                        sails.log("-------------------FINAL LISTA -----------------------")
+                        callback(null);
+                        // return res.send("tutores")
+                    });
+
+            },
+                function (error) {
                     // res.send("fin")
 
                     sails.log("-------------------FINAL DE TODO -----------------------")
@@ -1928,7 +1957,7 @@ module.exports = {
 
 
     },
-    cargarFotosAmerinst2: function(req, res) {
+    cargarFotosAmerinst2: function (req, res) {
         req.file('avatar').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/avatars'),
@@ -1947,10 +1976,10 @@ module.exports = {
                 return res.badRequest('No file was uploaded');
             }
 
-            uploadedFiles.forEach(function(file, i) {
+            uploadedFiles.forEach(function (file, i) {
                 var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
                 sails.log("nombre foto", nombreFoto)
-                    // var nombreFoto = file.filename.substring(4, 8) + "";
+                // var nombreFoto = file.filename.substring(4, 8) + "";
 
                 // sails.log('Persona - Identificacion', "*" + persona.identificacion + "*")
                 var urlFoto = (uploadedFiles[i].fd).split(path.sep);
@@ -1964,7 +1993,7 @@ module.exports = {
                     //     { codigoFoto: nombreFoto }
                     // ]
                     codigoFoto: nombreFoto
-                }, { img: url }).fetch().exec(function(err, per) {
+                }, { img: url }).fetch().exec(function (err, per) {
 
                     if (err) { console.log(err); return res.negotiate(err) };
 
@@ -1991,11 +2020,11 @@ module.exports = {
     },
     random: (req, res) => {
 
-        Persona.findOne({ identificacion: '1730' }).exec(function(err, datoPersona) {
+        Persona.findOne({ identificacion: '1730' }).exec(function (err, datoPersona) {
             if (err) { console.log(err); return res.negotiate(err) };
 
             console.log('ID PERSONA : ', datoPersona)
-            Persona.update({ id: datoPersona.id }, { img: 'url' }).exec(function(err, per) {
+            Persona.update({ id: datoPersona.id }, { img: 'url' }).exec(function (err, per) {
 
                 if (err) { console.log(err); return res.negotiate(err) };
 
@@ -2010,34 +2039,34 @@ module.exports = {
         Persona.find().exec((err, datoPersonas) => {
 
             var personas = [];
-            async.each(datoPersonas, function(element, cb) {
+            async.each(datoPersonas, function (element, cb) {
 
 
-                    if (element.rol != "tutor") {
-                        var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.codigoFoto,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno,tmpInscribe.codigoFoto, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre,tmpAlumno.codigoFoto, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.codigoFoto, p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = ? and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
+                if (element.rol != "tutor") {
+                    var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.codigoFoto,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno,tmpInscribe.codigoFoto, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre,tmpAlumno.codigoFoto, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.codigoFoto, p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = ? and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
 
-                        Persona.query(query, [element.identificacion], function(err, consulta) {
-                            if (err) { return res.serverError(err); }
-                            var auxConsulta = consulta[0].img;
-                            if (auxConsulta != null) {
-                                sails.log("IMG", auxConsulta)
-                                if (auxConsulta.length == 0) {
-                                    personas.push(consulta[0]);
-                                }
-                            } else {
+                    Persona.query(query, [element.identificacion], function (err, consulta) {
+                        if (err) { return res.serverError(err); }
+                        var auxConsulta = consulta[0].img;
+                        if (auxConsulta != null) {
+                            sails.log("IMG", auxConsulta)
+                            if (auxConsulta.length == 0) {
                                 personas.push(consulta[0]);
                             }
+                        } else {
+                            personas.push(consulta[0]);
+                        }
 
 
-                            cb();
-                        });
-                    } else {
                         cb();
-                    }
+                    });
+                } else {
+                    cb();
+                }
 
 
-                },
-                function(error) {
+            },
+                function (error) {
 
                     sails.log("-------------------FINAL LISTA -----------------------")
 
@@ -2057,8 +2086,8 @@ module.exports = {
                     //     res.send(estudiantes)
                     // });
 
-                    stringify(personas, function(err, output) {
-                        fs.writeFile('fotos_faltantes.csv', output, 'utf8', function(err) {
+                    stringify(personas, function (err, output) {
+                        fs.writeFile('fotos_faltantes.csv', output, 'utf8', function (err) {
                             if (err) {
                                 console.log('Some error occured - file either not saved or corrupted file saved.');
                             } else {
@@ -2070,12 +2099,82 @@ module.exports = {
 
 
                     res.send(personas)
-                        // return res.send("tutores")
+                    // return res.send("tutores")
                 });
 
 
         })
 
 
-    }
+    },
+    actualizarFoto: function (req, res) {
+
+        var files = [];
+        req.file('csv').upload({
+            // ~10MB
+            dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
+            saveAs: function (__newFileStream, cb) {
+                cb(null, "TT" + __newFileStream.filename);
+            },
+            maxBytes: 10000000
+        }, function whenDone(err, uploadedFiles) {
+
+            if (err) {
+                return res.negotiate(err);
+            }
+
+            // If no files were uploaded, respond with an error.
+            if (uploadedFiles.length === 0) {
+                return res.badRequest('No file was uploaded');
+            }
+
+
+            async.eachSeries(uploadedFiles, function (file, callback) {
+
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+                sails.log(file)
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
+                var options = {
+                    delimiter: ',', // optional
+                    quote: '"' // optional
+                };
+
+                nuevasPersonas = csvjson.toObject(dato, options);
+
+                async.each(nuevasPersonas, function (persona, cb) {
+
+                    var estudiante = recortarNombre2(persona.Estudiante)
+                    estudiante.nro = persona["Nº"]
+
+                    sails.log("Estudiante",estudiante)
+                    Persona.update(estudiante,{codigoFoto:persona["Código"]}).fetch().exec(function (err, datoPersona){
+
+                        sails.log("se actualizo :",datoPersona)
+                        cb()
+                    })
+
+
+                    // }, this);
+                },
+                    function (error) {
+
+                        sails.log("-------------------FINAL LISTA -----------------------")
+                        callback(null);
+                        // return res.send("tutores")
+                    });
+
+            },
+                function (error) {
+                    res.send("fin")
+                });
+
+
+        });
+
+
+
+    },
 };
