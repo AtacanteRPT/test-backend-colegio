@@ -83,6 +83,7 @@ module.exports = {
                 Inscribe.find({ idCurso: datoCurso.id }).populate('idAlumno').exec(function(err, inscripciones) {
 
                     var alumnosCurso = [];
+                    
                     async.forEach(inscripciones, function(inscripcion, cb) {
 
                         // sails.log("inscribe ", inscripcion)

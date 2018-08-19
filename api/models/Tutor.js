@@ -9,7 +9,10 @@ module.exports = {
     tableName: 'tutor',
 
     primaryKey: 'id',
+
     attributes: {
+        updatedAt: false,
+        createdAt: false,
         id: {
             type: 'number',
 
@@ -19,7 +22,7 @@ module.exports = {
         },
         idPersona: {
 
-            required:false, 
+            required: false,
 
             model: 'persona'
         }
