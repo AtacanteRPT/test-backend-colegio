@@ -9,10 +9,9 @@ module.exports = {
     tableName: 'asistencia',
     attributes: {
         fecha: {
-            type: 'string',
+            type: 'ref',
             columnType: 'date',
-            required:false, 
-            allowNull:true
+            required:false
         },
         estado: {
             type: 'string',

@@ -8,6 +8,7 @@
  */
 
 const bcrypt = require('bcrypt-nodejs');
+var moment = require('moment')
 
 
 module.exports = {
@@ -123,33 +124,60 @@ module.exports = {
                                     'contains': auxNombre[0]
                                 }
                             }
-        
+
                         ]
-        }).exec(function (err, datoPersona) {
+                    }).exec(function (err, datoPersona) {
 
-                sails.log("Usuario buscado : ", datoPersona)
-                res.send(datoPersona)
+                        sails.log("Usuario buscado : ", datoPersona)
+                        res.send(datoPersona)
 
-            })
+                    })
+            }
+
+        } else {
+
+            sails.log('BUSCANDO NUMERO : ' + (parseInt(auxNombre[0], 10) + 10))
+            Persona.find(
+                {
+                    cedula: { startsWith: parseFloat(auxNombre[0], 10) }
+
+                }).exec(function (err, datoPersona) {
+
+                    sails.log("Usuario buscado : ", datoPersona)
+                    res.send(datoPersona)
+
+                })
         }
 
-    } else {
 
-        sails.log('BUSCANDO NUMERO : ' + (parseInt(auxNombre[0], 10) + 10))
-    Persona.find(
-            {
-                cedula: { startsWith: parseFloat(auxNombre[0], 10) }
+    },
+    otro: function (req, res) {
+        var horaActual = moment().format('LTS')
 
-            }).exec(function (err, datoPersona) {
+        Asistencia.update({ idPersona: 1 }).set({ hora_salida: horaActual })
+            .fecth().exec((err, datoAsistencia2) => {
+                console.log('actualizado', datoAsistencia2)
 
-                sails.log("Usuario buscado : ", datoPersona)
-                res.send(datoPersona)
+                auxAlumno = {
+                    identificacion: actualIdentificacion,
+                    materno: resultado.materno,
+                    paterno: resultado.paterno,
+                    nombre: resultado.nombre,
+                    curso: resultado.grupo + " " + resultado.paralelo,
+                    turno: resultado.turno,
+                    img: resultado.img,
+                    hora_llegada: datoAsistencia2[0].hora_llegada,
+                    hora_salida: datoAsistencia2[0].hora_salida
+                }
 
+                // rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                //     // handle response
+                //     sails.log("se enviò una notificaciòn")
+                // });
+
+                res.send(auxAlumno);
             })
     }
-
-
-}
 
 
 }
