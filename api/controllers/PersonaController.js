@@ -55,7 +55,7 @@ module.exports = {
     crear: function (req, res) {
 
         var nuevaPersona = {
-            identificacion: req.param('cedula'),
+            identificacion: req.param('identificacion'),
             nombre: req.param('nombre'),
             email: req.param('email'),
             paterno: req.param('paterno'),
@@ -63,7 +63,7 @@ module.exports = {
             telefono: req.param('telefono'),
             celular: req.param('celular'),
             fechaNacimiento: req.param('fechaNacimiento'),
-            cedula: req.param('cedula'),
+            cedula: req.param('identificacion'),
             expedido: req.param('expedido'),
             sexo: req.param('sexo'),
             rol: req.param('rol'),
