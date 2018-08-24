@@ -99,7 +99,7 @@ function recortarNombre2(estudiante1) {
 // }
 function adicionar_tutor_alumno(tutor, alumno) {
 
-    rest.postJson('http://localhost:1337/alumno/adicionar_tutor', { idTutor: tutor.id, idAlumno: alumno.id }).on('complete', function (data2, response2) {
+    rest.postJson('http://moswara.com:48000/alumno/adicionar_tutor', { idTutor: tutor.id, idAlumno: alumno.id }).on('complete', function (data2, response2) {
         // handle response
         console.log('tutor adicionado', data2)
         sails.log("---------------ADICIONADO TUTOR con exito--------------------")
