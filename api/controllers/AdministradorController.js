@@ -1483,9 +1483,9 @@ module.exports = {
         var files = [];
         req.file('files').upload({
             // ~10MB
-            dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/nestorPeñaranda/padres'),
+            dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
             saveAs: function (__newFileStream, cb) {
-                cb(null, "TT_domingo" + __newFileStream.filename);
+                cb(null, "domingo_faltantes" + __newFileStream.filename);
             },
             maxBytes: 10000000
         }, function whenDone(err, uploadedFiles) {
@@ -1546,7 +1546,7 @@ module.exports = {
                     estudiante.nombre = persona.nombre
                     estudiante.paterno = persona.paterno
                     estudiante.materno = persona.materno
-                    estudiante.nro = persona.nro
+                    // estudiante.nro = persona.nro
 
                     Persona.findOne(estudiante).exec(function (err, datoEstudiante) {
 
