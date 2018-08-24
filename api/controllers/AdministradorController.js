@@ -1571,7 +1571,7 @@ module.exports = {
                                                 if (datoTutor1 == undefined) {
 
                                                     listaNuevaTutores1.push(tutor1)
-                                                    rest.postJson('http://localhost:1337/api/persona', tutor1).on('complete', function (data1, response2) {
+                                                    rest.postJson('http://moswara.com:48000/api/persona', tutor1).on('complete', function (data1, response2) {
                                                         // handle response
                                                         console.log('tutor adicionado', data1)
                                                         console.log("CREADO -----", data1)
@@ -1608,7 +1608,7 @@ module.exports = {
                                                 if (datoTutor2 == undefined) {
                                                     listaNuevaTutores2.push(tutor2)
 
-                                                    rest.postJson('http://localhost:1337/api/persona', tutor2).on('complete', function (data2, response2) {
+                                                    rest.postJson('http://moswara.com:48000/api/persona', tutor2).on('complete', function (data2, response2) {
                                                         // handle response
                                                         console.log('tutor adicionado', data2)
                                                         console.log("CREADO -----", data2)
@@ -1642,7 +1642,7 @@ module.exports = {
                                             .exec(function (err, datoTutor3) {
                                                 if (datoTutor3 == undefined) {
                                                     listaNuevaTutores3.push(tutor3)
-                                                    rest.postJson('http://localhost:1337/api/persona', tutor3).on('complete', function (data3, response2) {
+                                                    rest.postJson('http://moswara.com:48000/api/persona', tutor3).on('complete', function (data3, response2) {
                                                         // handle response
                                                         console.log('tutor adicionado', data3)
                                                         console.log("CREADO -----", data3)
@@ -1677,7 +1677,7 @@ module.exports = {
                                             .exec(function (err, datoTutor4) {
                                                 if (datoTutor4 == undefined) {
                                                     listaNuevaTutores4.push(tutor4)
-                                                    rest.postJson('http://localhost:1337/api/persona', tutor4).on('complete', function (data4, response2) {
+                                                    rest.postJson('http://moswara.com:48000/api/persona', tutor4).on('complete', function (data4, response2) {
                                                         // handle response
                                                         console.log('tutor adicionado', data4)
                                                         console.log("CREADO -----", data4)
