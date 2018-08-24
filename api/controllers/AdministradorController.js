@@ -1786,7 +1786,7 @@ module.exports = {
         var files = [];
         req.file('files').upload({
             // ~10MB
-            dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/nestorPeñaranda/padres'),
+            dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
             saveAs: function (__newFileStream, cb) {
                 cb(null, "TT" + __newFileStream.filename);
             },
