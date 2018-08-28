@@ -2228,7 +2228,7 @@ module.exports = {
                                 
                                 Persona.update(data3.id).set({ identificacion: data3.id + auxIdentificacion }).fetch().exec(function (err, personaUpdate) {
                                     sails.log("ACTUALIZADO", personaUpdate)
-                                    var codigoQr = personaUpdate.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                                    var codigoQr = personaUpdate[0].identificacion + '$2018$' + 'Colegio Domingo Savio '
                                     var code = qr.image(codigoQr, { type: 'png' });
                                     var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
                                     if (!fs.existsSync(dir)) {
@@ -2249,7 +2249,7 @@ module.exports = {
                                 console.log("CREADO -----", data3)
                                 Persona.update(data3.id).set({ identificacion: data3.id + auxIdentificacion }).fetch().exec(function (err, personaUpdate) {
                                     sails.log("ACTUALIZADO", personaUpdate)
-                                    var codigoQr = personaUpdate.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                                    var codigoQr = personaUpdate[0].identificacion + '$2018$' + 'Colegio Domingo Savio '
                                     var code = qr.image(codigoQr, { type: 'png' });
                                     var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
                                     if (!fs.existsSync(dir)) {
