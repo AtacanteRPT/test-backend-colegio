@@ -2216,48 +2216,48 @@ module.exports = {
                 nuevasPersonas = csvjson.toObject(dato, options);
 
                 async.eachSeries(nuevasPersonas, function (persona, cb) {
+                    if (persona.nombre.length > 0) {
+                        if (persona.rol == "profesor") {
+                            rest.postJson('http://moswara.com:48000/api/persona', persona).on('complete', function (data3, response2) {
+                                // handle response
+                                console.log('tutor adicionado', data3)
+                                console.log("CREADO -----", data3)
+                                adicionar_tutor_alumno(data3, datoEstudiante)
+                                var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                                var code = qr.image(codigoQr, { type: 'png' });
+                                var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
+                                if (!fs.existsSync(dir)) {
+                                    fs.mkdirSync(dir);
+                                }
+                                var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
 
-                    if (persona.rol == "profesor") {
-                        rest.postJson('http://moswara.com:48000/api/persona', persona).on('complete', function (data3, response2) {
-                            // handle response
-                            console.log('tutor adicionado', data3)
-                            console.log("CREADO -----", data3)
-                            adicionar_tutor_alumno(data3, datoEstudiante)
-                            var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
-                            var code = qr.image(codigoQr, { type: 'png' });
-                            var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
-                            if (!fs.existsSync(dir)) {
-                                fs.mkdirSync(dir);
-                            }
-                            var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
+                                code.pipe(output);
+                                cb();
 
-                            code.pipe(output);
+                            });
+                        } else {
+                            persona.cargo = persona.asignatura;
+                            rest.postJson('http://moswara.com:48000/api/persona', persona).on('complete', function (data3, response2) {
+                                // handle response
+                                console.log('tutor adicionado', data3)
+                                console.log("CREADO -----", data3)
+                                adicionar_tutor_alumno(data3, datoEstudiante)
+                                var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                                var code = qr.image(codigoQr, { type: 'png' });
+                                var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
+                                if (!fs.existsSync(dir)) {
+                                    fs.mkdirSync(dir);
+                                }
+                                var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
 
+                                code.pipe(output);
+                                cb();
 
-                        });
-                    } else {
-                        persona.cargo = persona.asignatura;
-                        rest.postJson('http://moswara.com:48000/api/persona', persona).on('complete', function (data3, response2) {
-                            // handle response
-                            console.log('tutor adicionado', data3)
-                            console.log("CREADO -----", data3)
-                            adicionar_tutor_alumno(data3, datoEstudiante)
-                            var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
-                            var code = qr.image(codigoQr, { type: 'png' });
-                            var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
-                            if (!fs.existsSync(dir)) {
-                                fs.mkdirSync(dir);
-                            }
-                            var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
-
-                            code.pipe(output);
-
-
-                        });
+                            });
+                        }
+                    }else {
+                        cb();
                     }
-
-
-
 
 
                 },
