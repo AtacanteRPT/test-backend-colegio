@@ -2149,10 +2149,10 @@ module.exports = {
                     var estudiante = recortarNombre2(persona.Estudiante)
                     estudiante.nro = persona["Nº"]
 
-                    sails.log("Estudiante",estudiante)
-                    Persona.update(estudiante,{codigoFoto:persona["Código"]}).fetch().exec(function (err, datoPersona){
+                    sails.log("Estudiante", estudiante)
+                    Persona.update(estudiante, { codigoFoto: persona["Código"] }).fetch().exec(function (err, datoPersona) {
 
-                        sails.log("se actualizo :",datoPersona)
+                        sails.log("se actualizo :", datoPersona)
                         cb()
                     })
 
@@ -2177,4 +2177,110 @@ module.exports = {
 
 
     },
+
+    docentes_domingo: function (req, res) {
+
+        var files = [];
+        req.file('files').upload({
+            // ~10MB
+            dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
+            saveAs: function (__newFileStream, cb) {
+                cb(null, "TT" + __newFileStream.filename);
+            },
+            maxBytes: 10000000
+        }, function whenDone(err, uploadedFiles) {
+
+            if (err) {
+                return res.negotiate(err);
+            }
+
+            // If no files were uploaded, respond with an error.
+            if (uploadedFiles.length === 0) {
+                return res.badRequest('No file was uploaded');
+            }
+
+
+            async.eachSeries(uploadedFiles, function (file, callback) {
+
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+                sails.log(file)
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
+                var options = {
+                    delimiter: ',', // optional
+                    quote: '"' // optional
+                };
+
+                nuevasPersonas = csvjson.toObject(dato, options);
+
+                async.eachSeries(nuevasPersonas, function (persona, cb) {
+
+                    if (persona.rol == "profesor") {
+                        rest.postJson('http://moswara.com:48000/api/persona', persona).on('complete', function (data3, response2) {
+                            // handle response
+                            console.log('tutor adicionado', data3)
+                            console.log("CREADO -----", data3)
+                            adicionar_tutor_alumno(data3, datoEstudiante)
+                            var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                            var code = qr.image(codigoQr, { type: 'png' });
+                            var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
+                            if (!fs.existsSync(dir)) {
+                                fs.mkdirSync(dir);
+                            }
+                            var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
+
+                            code.pipe(output);
+
+
+                        });
+                    } else {
+                        persona.cargo = persona.asignatura;
+                        rest.postJson('http://moswara.com:48000/api/persona', persona).on('complete', function (data3, response2) {
+                            // handle response
+                            console.log('tutor adicionado', data3)
+                            console.log("CREADO -----", data3)
+                            adicionar_tutor_alumno(data3, datoEstudiante)
+                            var codigoQr = persona.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                            var code = qr.image(codigoQr, { type: 'png' });
+                            var dir = './assets/codigos/domingo_savio/docentes/' + file.filename.split(".")[0] + "/"
+                            if (!fs.existsSync(dir)) {
+                                fs.mkdirSync(dir);
+                            }
+                            var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + auxLista.numeroQr + '.jpg'))
+
+                            code.pipe(output);
+
+
+                        });
+                    }
+
+
+
+
+
+                },
+                    function (error) {
+
+
+                        sails.log("-------------------FINAL LISTA -----------------------")
+                        callback(null);
+                        // return res.send("tutores")
+                    });
+
+            },
+                function (error) {
+                    // res.send("fin")
+
+                    sails.log("-------------------FINAL DE TODO -----------------------")
+                });
+
+            res.send("OTRA ALTERNATIVA")
+
+        });
+
+
+
+    }
 };

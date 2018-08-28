@@ -134,8 +134,23 @@ module.exports = {
                         })
                     })
                     break;
-                case 'administrativo':
-                    Administrador.create({ idPersona: datoPersona.id, cargo: req.param('cargo') }).exec(function (err, creado) { if (err) { return res.serverError(err); } })
+                case 'administrador':
+                    Administrador.create({ idPersona: datoPersona.id, cargo: req.param('cargo') }).exec(function (err, creado) {
+                        if (err) { return res.serverError(err); }
+                        usuario = {
+
+                            username: datoPersona.id + datoPersona.nombre,
+                            password: datoPersona.id + datoPersona.nombre,
+                            codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
+                            rol: rol,
+                            idPersona: datoPersona.id
+                        }
+
+                        Usuario.create(usuario).exec(function (err, creado) {
+                            if (err) { return res.serverError(err); }
+                            res.send(datoPersona);
+                        })
+                    })
                     break;
                 default:
                     res.send({ mensaje: "no fue asignado ningun rol" })
