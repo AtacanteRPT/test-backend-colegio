@@ -10,176 +10,78 @@
 const bcrypt = require('bcrypt-nodejs');
 var moment = require('moment')
 
-
 module.exports = {
 
-    cambiarPassword: function (req, res) {
+  cambiarPassword: function (req, res) {
+    var actualPassword = req.param("actualPassword"),
+      nuevoPassword = req.param("nuevoPassword")
 
-        // if(err){return res.serverError(err)}
-        // bcrypt.genSalt(10, function(err, salt) {
-        //     bcrypt.hash(req.param('password'), salt, null, function(err, hash) {
-        //         if (err) return cb(err);
+    Usuario.findOne({
+      idPersona: req.user.id
+    }, function (err, user) {
+      if (err) return cb(err);
+      if (!user) return cb(null, false, {
+        message: 'Usuario No encontrado'
+      });
+      bcrypt.compare(actualPassword, user.password, function (err, res) {
+        if (!res) {
+          res.json({
+            mensaje: "password actual incorrecto "
+          })
+        }
+        bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
+          if (err) return cb(err);
 
-        //         Usuario.update({idPersona : req.param('id')}).set({password:hash}).exec(function(err,datoUsuario){
-        //             res.json({mensaje: 'cambio de password exitoso'})
-        //         })
+          Usuario.update({
+            idPersona: req.user.id
+          }).set({
+            password: hash
+          }).exec(function (err, datoUsuario) {
+            res.json({
+              mensaje: 'cambio de password exitoso'
+            })
+          })
 
-        //     });
-        // });
-
-
-        bcrypt.genSalt(10, function (err, salt) {
-            bcrypt.hash(req.param('password'), salt, null, function (err, hash) {
-                if (err) return cb(err);
-
-                Usuario.update({ idPersona: req.user.id }).set({ password: hash }).exec(function (err, datoUsuario) {
-                    res.json({ mensaje: 'cambio de password exitoso' })
-                })
-
-            });
         });
 
 
-    }
-    ,
-    buscar: function (req, res) {
+        // sails.log("Passport.js - userDetails", userDetails)
 
-        var auxNombre = req.param("nombre").split(" ")
-        sails.log("numero", parseInt(auxNombre[0], 10) + 10)
+      });
+    });
+  },
+ 
+  otro: function (req, res) {
+    var horaActual = moment().format('LTS')
 
-        if (isNaN(parseInt(auxNombre[0], 10))) {
+    Asistencia.update({
+        idPersona: 1
+      }).set({
+        hora_salida: horaActual
+      })
+      .fecth().exec((err, datoAsistencia2) => {
+        console.log('actualizado', datoAsistencia2)
 
-            sails.log("NAN en auxNombre")
-            if (auxNombre.length == 2) {
-                Persona.find(
-                    {
-                        and: [
-                            {
-                                nombre: {
-                                    'contains': auxNombre[0]
-                                }
-                            },
-                            {
-                                paterno: {
-                                    'contains': auxNombre[1]
-                                }
-                            }
-
-                        ]
-                    }).exec(function (err, datoPersona) {
-
-                        sails.log("Usuario buscado : ", datoPersona)
-                        res.send(datoPersona)
-
-                    })
-            }
-            else if (auxNombre.length == 3) {
-                Persona.find(
-                    {
-                        and: [
-                            {
-                                nombre: {
-                                    'contains': auxNombre[0]
-                                }
-                            },
-                            {
-                                paterno: {
-                                    'contains': auxNombre[1]
-                                }
-                            },
-                            {
-                                materno: {
-                                    'contains': auxNombre[2]
-                                }
-                            }
-                            // ,
-                            // {
-                            //     cedula: {
-                            //         'contains': auxNombre[0]
-                            //     }
-                            // }
-                        ]
-                    }).exec(function (err, datoPersona) {
-
-                        sails.log("Usuario buscado : ", datoPersona)
-                        res.send(datoPersona)
-
-                    })
-            } else {
-                Persona.find(
-                    {
-                        or: [
-                            {
-                                nombre: {
-                                    'contains': auxNombre[0]
-                                }
-                            },
-                            {
-                                paterno: {
-                                    'contains': auxNombre[0]
-                                }
-                            },
-                            {
-                                materno: {
-                                    'contains': auxNombre[0]
-                                }
-                            }
-
-                        ]
-                    }).exec(function (err, datoPersona) {
-
-                        sails.log("Usuario buscado : ", datoPersona)
-                        res.send(datoPersona)
-
-                    })
-            }
-
-        } else {
-
-            sails.log('BUSCANDO NUMERO : ' + (parseInt(auxNombre[0], 10) + 10))
-            Persona.find(
-                {
-                    cedula: { startsWith: parseFloat(auxNombre[0], 10) }
-
-                }).exec(function (err, datoPersona) {
-
-                    sails.log("Usuario buscado : ", datoPersona)
-                    res.send(datoPersona)
-
-                })
+        auxAlumno = {
+          identificacion: actualIdentificacion,
+          materno: resultado.materno,
+          paterno: resultado.paterno,
+          nombre: resultado.nombre,
+          curso: resultado.grupo + " " + resultado.paralelo,
+          turno: resultado.turno,
+          img: resultado.img,
+          hora_llegada: datoAsistencia2[0].hora_llegada,
+          hora_salida: datoAsistencia2[0].hora_salida
         }
 
+        // rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+        //     // handle response
+        //     sails.log("se enviò una notificaciòn")
+        // });
 
-    },
-    otro: function (req, res) {
-        var horaActual = moment().format('LTS')
-
-        Asistencia.update({ idPersona: 1 }).set({ hora_salida: horaActual })
-            .fecth().exec((err, datoAsistencia2) => {
-                console.log('actualizado', datoAsistencia2)
-
-                auxAlumno = {
-                    identificacion: actualIdentificacion,
-                    materno: resultado.materno,
-                    paterno: resultado.paterno,
-                    nombre: resultado.nombre,
-                    curso: resultado.grupo + " " + resultado.paralelo,
-                    turno: resultado.turno,
-                    img: resultado.img,
-                    hora_llegada: datoAsistencia2[0].hora_llegada,
-                    hora_salida: datoAsistencia2[0].hora_salida
-                }
-
-                // rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
-                //     // handle response
-                //     sails.log("se enviò una notificaciòn")
-                // });
-
-                res.send(auxAlumno);
-            })
-    }
+        res.send(auxAlumno);
+      })
+  }
 
 
 }
-
-
