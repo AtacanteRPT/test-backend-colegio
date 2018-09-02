@@ -596,27 +596,36 @@ module.exports = {
   buscar_alumno: function (req, res) {
 
     var auxNombre = req.param("nombre").split(" ")
-    sails.log("numero", parseInt(auxNombre[0], 10) + 10)
-
+    sails.log("AUX NOMBRE : ", auxNombre)
     // if (isNaN(parseInt(auxNombre[0], 10))) {
-
-    sails.log("NAN en auxNombre")
+    var listaaux = [];
+    listaaux.f
     if (auxNombre.length == 2) {
-      Persona.find({
-        and: [{
-            nombre: {
-              'contains': auxNombre[0]
-            }
-          },
-          {
-            paterno: {
-              'contains': auxNombre[1]
-            }
-          },
-          {
-            rol: "alumno"
-          }
 
+      sails.log("222222222222222222222222222222222")
+
+      Persona.find({
+
+        rol: "alumno",
+        or: [{
+            nombre: {
+              'contains': auxNombre[0] + " " + auxNombre[1]
+            }
+          },
+
+          {
+            and: [{
+                nombre: {
+                  'contains': auxNombre[0]
+                }
+              },
+              {
+                paterno: {
+                  'contains': auxNombre[1]
+                }
+              }
+            ]
+          }
 
         ]
       }).exec(function (err, datoPersona) {
@@ -627,9 +636,11 @@ module.exports = {
       })
     } else if (auxNombre.length == 3) {
       Persona.find({
-        and: [{
+        rol: "alumno",
+
+        or: [{
             nombre: {
-              'contains': auxNombre[0]
+              'contains': auxNombre[0] + " " + auxNombre[1] + " " + auxNombre[2]
             }
           },
           {
@@ -638,19 +649,20 @@ module.exports = {
             }
           },
           {
-            materno: {
+            paterno: {
               'contains': auxNombre[2]
             }
           },
           {
-            rol: "alumno"
+            materno: {
+              'contains': auxNombre[1]
+            }
+          },
+          {
+            materno: {
+              'contains': auxNombre[2]
+            }
           }
-          // ,
-          // {
-          //     cedula: {
-          //         'contains': auxNombre[0]
-          //     }
-          // }
         ]
       }).exec(function (err, datoPersona) {
 
@@ -684,6 +696,13 @@ module.exports = {
 
         ]
       }).exec(function (err, datoPersona) {
+
+        // var n = _.find(datoPersona, function (obj) {
+
+        //   return obj.materno == "Guerra" || obj.paterno == "Guerra" ;
+
+        // });
+
 
         sails.log("Usuario buscado : ", datoPersona)
         res.send(datoPersona)

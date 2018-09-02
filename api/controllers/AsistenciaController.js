@@ -158,7 +158,8 @@ module.exports = {
                   nombre: resultado.nombre,
                   curso: resultado.grupo + " " + resultado.paralelo,
                   turno: resultado.turno,
-                  img: resultado.img
+                  img: resultado.img,
+                  rol:"alumno"
                 }
 
 
@@ -194,6 +195,7 @@ module.exports = {
                     curso: resultado.grupo + " " + resultado.paralelo,
                     turno: resultado.turno,
                     img: resultado.img,
+                    rol:"alumno",
                     hora_llegada: datoAsistencia2[0].hora_llegada,
                     hora_salida: datoAsistencia2[0].hora_salida
                   }
