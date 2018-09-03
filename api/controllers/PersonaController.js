@@ -51,11 +51,26 @@ module.exports = {
     // })
   },
 
+  actualizarCedula: function (req, res) {
+
+    Persona.find({rol:"tutor"}).exec(function (err, datoPersonas) {
+
+      datoPersonas.forEach(element => {
+        Persona.update(element.id).set({
+          cedula: element.identificacion
+        }).exec(function (err, datoActualizado) {
+          
+        });
+      });
+      res.send("actualizado")
+    })
+
+  },
 
   crear: function (req, res) {
 
     var nuevaPersona = {
-      identificacion: req.param('identificacion'),
+      identificacion: req.param('cedula'),
       nombre: req.param('nombre'),
       email: req.param('email'),
       paterno: req.param('paterno'),
@@ -63,7 +78,7 @@ module.exports = {
       telefono: req.param('telefono'),
       celular: req.param('celular'),
       fechaNacimiento: req.param('fechaNacimiento'),
-      cedula: req.param('identificacion'),
+      cedula: req.param('cedula'),
       expedido: req.param('expedido'),
       sexo: req.param('sexo'),
       rol: req.param('rol'),
@@ -293,7 +308,6 @@ module.exports = {
       res.send(datoPersona);
     });
   },
-
   notificar: (req, res) => {
 
 
@@ -697,15 +711,15 @@ module.exports = {
         ]
       }).exec(function (err, datoPersona) {
 
-        // var n = _.find(datoPersona, function (obj) {
+        var n = _.filter(datoPersona, function (obj) {
 
-        //   return obj.materno == "Guerra" || obj.paterno == "Guerra" ;
+          return obj.materno == "Guerra";
 
-        // });
+        });
 
 
-        sails.log("Usuario buscado : ", datoPersona)
-        res.send(datoPersona)
+        // sails.log("Usuario buscado : ", datoPersona)
+        res.send(n)
 
       })
     }

@@ -29,6 +29,7 @@ module.exports.routes = {
     //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
     'POST /api/persona': 'PersonaController.crear',
+    'GET /persona/traer/:id': 'PersonaController.traer',
     'GET /persona/buscar/:nombre': 'PersonaController.buscar',
     'GET /persona/buscar_tutor/:nombre': 'PersonaController.buscar_tutor',
     'GET /persona/buscar_alumno/:nombre': 'PersonaController.buscar_alumno',

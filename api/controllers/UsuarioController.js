@@ -12,7 +12,7 @@ var moment = require('moment')
 
 module.exports = {
 
-  cambiarPassword: function (req, res) {
+  cambiarMiPassword: function (req, res) {
     var actualPassword = req.param("actualPassword"),
       nuevoPassword = req.param("nuevoPassword")
 
@@ -29,19 +29,18 @@ module.exports = {
             mensaje: "password actual incorrecto "
           })
         }
-        bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
-          if (err) return cb(err);
-
-          Usuario.update({
-            idPersona: req.user.id
-          }).set({
-            password: hash
-          }).exec(function (err, datoUsuario) {
-            res.json({
-              mensaje: 'cambio de password exitoso'
+        bcrypt.genSalt(10, function (err, salt) {
+          bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
+            Usuario.update({
+              idPersona: id
+            }).set({
+              password: hash
+            }).exec(function (err, datoUsuario) {
+              res.json({
+                mensaje: 'cambio de password exitoso'
+              })
             })
-          })
-
+          });
         });
 
 
@@ -50,7 +49,27 @@ module.exports = {
       });
     });
   },
- 
+  cambiarPassword: function (req, res) {
+    var id = req.param("id"),
+      nuevoPassword = req.param("nuevoPassword")
+
+    bcrypt.genSalt(10, function (err, salt) {
+      bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
+        Usuario.update({
+          idPersona: id
+        }).set({
+          password: hash
+        }).exec(function (err, datoUsuario) {
+          res.json({
+            mensaje: 'cambio de password exitoso'
+          })
+        })
+      });
+    });
+
+
+  },
+
   otro: function (req, res) {
     var horaActual = moment().format('LTS')
 
