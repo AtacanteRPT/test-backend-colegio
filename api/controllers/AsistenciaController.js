@@ -166,6 +166,11 @@ module.exports = {
                 auxAlumno.hora_llegada = moment().format('LTS')
                 auxAlumno.hora_salida = moment().format('LTS') + '(no registrado)'
                 auxAlumno.tutores = listaTutores;
+
+                rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                  // handle response
+                  sails.log("se enviò una notificaciòn")
+              });
                 console.log("nuevo", auxAlumno)
                 return res.send(auxAlumno);
 
@@ -202,10 +207,10 @@ module.exports = {
                   auxAlumno.tutores = listaTutores;
 
 
-                  // rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
-                  //     // handle response
-                  //     sails.log("se enviò una notificaciòn")
-                  // });
+                  rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                      // handle response
+                      sails.log("se enviò una notificaciòn")
+                  });
 
                   res.send(auxAlumno);
                 })
