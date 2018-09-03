@@ -61,7 +61,9 @@ module.exports = {
         },
         cedula: {
             type: 'string',
-            required:false, allowNull:true
+            required:false, 
+            unique:true,
+            allowNull:true
 
 
         },
