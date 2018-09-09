@@ -12,10 +12,9 @@ var moment = require('moment')
 
 module.exports = {
 
-  cambiarMiPassword: function (req, res) {
+  cambiarPassword: function (req, res) {
     var actualPassword = req.param("actualPassword"),
       nuevoPassword = req.param("nuevoPassword")
-
     Usuario.findOne({
       idPersona: req.user.id
     }, function (err, user) {
@@ -42,32 +41,29 @@ module.exports = {
             })
           });
         });
-
-
         // sails.log("Passport.js - userDetails", userDetails)
-
       });
     });
   },
-  cambiarPassword: function (req, res) {
-    var id = req.param("id"),
-      nuevoPassword = req.param("nuevoPassword")
-
-    bcrypt.genSalt(10, function (err, salt) {
-      bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
-        Usuario.update({
-          idPersona: id
-        }).set({
-          password: hash
-        }).exec(function (err, datoUsuario) {
-          res.json({
-            mensaje: 'cambio de password exitoso'
+  resetearPassword: function (req, res) {
+    var id = req.param("id")
+    var nuevoPassword = "";
+    Usuario.findOne({
+      idPersona: id
+    }).exec(function (err, datoUsuario) {
+      nuevoPassword = datoUsuario.username
+      bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
+          Usuario.update(datoUsuario.id).set({
+            password: hash
+          }).exec(function (err, datoUsuario) {
+            res.json({
+              mensaje: 'se a reseteado el password'
+            })
           })
-        })
+        });
       });
-    });
-
-
+    })
   },
 
   otro: function (req, res) {
