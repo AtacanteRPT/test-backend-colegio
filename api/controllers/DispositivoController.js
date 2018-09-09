@@ -18,7 +18,6 @@ module.exports = {
     },
     adicionar: function (req, res) {
 
-
         sails.log("######### ################", req.param("idDispositivo"))
         Dispositivo.create({ idDispositivo: req.param("idDispositivo"), idPersona: req.user.id }).fetch().exec(function (err, result) {
             if (err) { return res.serverError(err); }

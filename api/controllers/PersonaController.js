@@ -50,7 +50,6 @@ module.exports = {
     //     res.send("actualizando")
     // })
   },
-
   actualizarCedula: function (req, res) {
 
     Persona.find({
@@ -68,7 +67,6 @@ module.exports = {
     })
 
   },
-
   crear: function (req, res) {
 
     var nuevaPersona = {
@@ -471,7 +469,11 @@ module.exports = {
       }).exec(function (err, datoPersona) {
 
         sails.log("Usuario buscado : ", datoPersona)
-        res.send(datoPersona)
+
+        Usuario.findOne({idPersona:datoPersona.id}).exec(function(err,datoUsuario){
+          datoPersona.username = datoUsuario.username
+          res.send(datoPersona)
+        })
 
       })
     }
