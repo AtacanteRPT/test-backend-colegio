@@ -477,8 +477,8 @@ module.exports = {
         //     return res.serverError(err)
         //   };
         //   datoPersona.username = datoUsuario.username
-        //   res.send(datoPersona)
         // })
+          res.send(datoPersona)
 
       })
     }
