@@ -466,19 +466,12 @@ module.exports = {
           }
 
         ]
-      }).exec(function (err, datoPersona) {
+      }).populate("usuario").exec(function (err, datoPersona) {
 
         sails.log("Usuario buscado : ", datoPersona)
 
-        // Usuario.findOne({
-        //   idPersona: datoPersona.id
-        // }).exec(function (err, datoUsuario) {
-        //   if (err) {
-        //     return res.serverError(err)
-        //   };
-        //   datoPersona.username = datoUsuario.username
-        // })
-          res.send(datoPersona)
+        
+        res.send(datoPersona)
 
       })
     }

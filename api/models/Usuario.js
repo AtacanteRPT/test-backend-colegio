@@ -21,7 +21,7 @@ module.exports = {
             autoIncrement: true,
         },
         idPersona: {
-
+            unique: true,
             model: 'persona'
         },
         username: {
