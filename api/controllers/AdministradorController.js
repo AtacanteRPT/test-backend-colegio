@@ -535,7 +535,6 @@ module.exports = {
 
 
     },
-
     adicionarPersonasDomingoSavio: function (req, res) {
 
         var files = [];
@@ -710,7 +709,6 @@ module.exports = {
 
 
     },
-
     adicionarPersonasDomingoSavioAutomatico: function (req, res) {
 
         var files = [];
@@ -819,7 +817,6 @@ module.exports = {
 
 
     },
-
     generarCodigosDomingoSavio: function (req, res) {
         for (var index = 1; index <= 27; index++) {
             rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + index).on('complete', function (data, response) {
@@ -829,8 +826,6 @@ module.exports = {
         }
         res.send("TODO A ACABADO")
     },
-
-
     adicionarAdminFab: function (req, res) {
 
         var csvFilePath = '../.././assets/cvs/administrativosFab_2.csv'
@@ -1477,7 +1472,8 @@ module.exports = {
 
 
     },
-    codigosTutoresDomingoSavio2: function (req, res) { },
+    codigosTutoresDomingoSavio2: function (req, res) { 
+    },
     cargarTutoresNestorP: function (req, res) {
 
         var files = [];
@@ -2177,7 +2173,6 @@ module.exports = {
 
 
     },
-
     docentes_domingo: function (req, res) {
 
         var files = [];
@@ -2262,6 +2257,81 @@ module.exports = {
                                 })
 
                             });
+                        }
+                    } else {
+                        cb();
+                    }
+
+
+                },
+                    function (error) {
+
+
+                        sails.log("-------------------FINAL LISTA -----------------------")
+                        callback(null);
+                        // return res.send("tutores")
+                    });
+
+            },
+                function (error) {
+                    // res.send("fin")
+
+                    sails.log("-------------------FINAL DE TODO -----------------------")
+                });
+
+            res.send("OTRA ALTERNATIVA")
+
+        });
+
+
+
+    },
+    arreglar_fotos: function (req, res) {
+
+        var files = [];
+        req.file('files').upload({
+            // ~10MB
+            dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
+            saveAs: function (__newFileStream, cb) {
+                cb(null, "TT" + __newFileStream.filename);
+            },
+            maxBytes: 10000000
+        }, function whenDone(err, uploadedFiles) {
+
+            if (err) {
+                return res.negotiate(err);
+            }
+
+            // If no files were uploaded, respond with an error.
+            if (uploadedFiles.length === 0) {
+                return res.badRequest('No file was uploaded');
+            }
+
+
+            async.eachSeries(uploadedFiles, function (file, callback) {
+
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+                sails.log(file)
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(file.fd, { encoding: 'utf8' });
+                var options = {
+                    delimiter: ',', // optional
+                    quote: '"' // optional
+                };
+
+                nuevasPersonas = csvjson.toObject(dato, options);
+
+                async.eachSeries(nuevasPersonas, function (persona, cb) {
+                    if (persona.nombre.length > 0) {
+
+                        var auxIdentificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0)
+
+                        if (persona.rol == "profesor") {
+                        
+                        } else {
+                        
                         }
                     } else {
                         cb();

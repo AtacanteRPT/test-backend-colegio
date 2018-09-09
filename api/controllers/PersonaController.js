@@ -53,13 +53,15 @@ module.exports = {
 
   actualizarCedula: function (req, res) {
 
-    Persona.find({rol:"tutor"}).exec(function (err, datoPersonas) {
+    Persona.find({
+      rol: "tutor"
+    }).exec(function (err, datoPersonas) {
 
       datoPersonas.forEach(element => {
         Persona.update(element.id).set({
           cedula: element.identificacion
         }).exec(function (err, datoActualizado) {
-          
+
         });
       });
       res.send("actualizado")
@@ -474,6 +476,7 @@ module.exports = {
       })
     }
 
+
     // } else {
 
     //     sails.log('BUSCANDO NUMERO : ' + (parseInt(auxNombre[0], 10) + 10))
@@ -491,7 +494,14 @@ module.exports = {
 
 
   },
+  credencial: function (req, res) {
 
+    Usuario.findOne({
+      idPersona: req.param("id")
+    }).exec(function (err, datoUsuario) {
+      res.send(datoUsuario)
+    })
+  },
   buscar_tutor: function (req, res) {
 
     var auxNombre = req.param("nombre").split(" ")
