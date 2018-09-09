@@ -470,10 +470,15 @@ module.exports = {
 
         sails.log("Usuario buscado : ", datoPersona)
 
-        Usuario.findOne({idPersona:datoPersona.id}).exec(function(err,datoUsuario){
-          datoPersona.username = datoUsuario.username
-          res.send(datoPersona)
-        })
+        // Usuario.findOne({
+        //   idPersona: datoPersona.id
+        // }).exec(function (err, datoUsuario) {
+        //   if (err) {
+        //     return res.serverError(err)
+        //   };
+        //   datoPersona.username = datoUsuario.username
+        //   res.send(datoPersona)
+        // })
 
       })
     }
