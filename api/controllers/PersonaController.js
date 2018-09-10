@@ -432,7 +432,7 @@ module.exports = {
               sails.log("dispositivos", listaDispositivos)
               var firstNotification = new OneSignal.Notification({
                 contents: {
-                  en: "Marcò " + datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno,
+                  en:  datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno,
                   tr: "Test mesajı"
                 },
 
