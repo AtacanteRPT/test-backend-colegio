@@ -2455,53 +2455,35 @@ module.exports = {
       }
 
 
-      async.eachSeries(uploadedFiles, function (file, callback) {
+      async.each(uploadedFiles, function (file, cb) {
 
           sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
           sails.log(file)
           sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-          var nuevasPersonas = [];
-          var dato = fs.readFileSync(file.fd, {
-            encoding: 'utf8'
-          });
-          var options = {
-            delimiter: ',', // optional
-            quote: '"' // optional
-          };
-
-          nuevasPersonas = csvjson.toObject(dato, options);
-
-          async.eachSeries(nuevasPersonas, function (persona, cb) {
-
-              var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
 
 
-              var urlFoto = (uploadedFiles[0].fd).split(path.sep);
-              sails.log("fotos:", urlFoto);
-              var url = "avatars//" + urlFoto[urlFoto.length - 1]
+          var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
 
-              Persona.update({
-                codigoFoto: nombreFoto
-              }).set({
-                img: urlFoto
-              }).fetch().exec(function (err, datoPersona) {
-                console.log("actualizado", datoPersona)
 
-              })
+          var urlFoto = (uploadedFiles[0].fd).split(path.sep);
+          sails.log("fotos:", urlFoto);
+          var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
-              cb();
+          Persona.update({
+            codigoFoto: nombreFoto
+          }).set({
+            img: urlFoto
+          }).fetch().exec(function (err, datoPersona) {
+            console.log("actualizado", datoPersona)
+
+          })
+
+          cb();
 
 
 
-            },
-            function (error) {
 
-
-              sails.log("-------------------FINAL LISTA -----------------------")
-              callback(null);
-              // return res.send("tutores")
-            });
 
         },
         function (error) {
