@@ -2436,9 +2436,9 @@ module.exports = {
   arreglar_fotos: function (req, res) {
 
     var files = [];
-    req.file('files').upload({
+    req.file('avatar').upload({
       // ~10MB
-      dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
+      dirname: require('path').resolve(sails.config.appPath, 'assets/avatars'),
       saveAs: function (__newFileStream, cb) {
         cb(null, "TM" + __newFileStream.filename);
       },
@@ -2482,13 +2482,17 @@ module.exports = {
                   nro: persona.nro,
                   rol: "alumno"
                 }
+                var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
 
-                // var urlFoto = (uploadedFiles[0].fd).split(path.sep);
-                // sails.log("fotos:", urlFoto);
-                // var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
-                Persona.update(auxAlumno).set({
-                  codigoFoto: persona.codigoFoto
+                var urlFoto = (uploadedFiles[0].fd).split(path.sep);
+                sails.log("fotos:", urlFoto);
+                var url = "avatars//" + urlFoto[urlFoto.length - 1]
+
+                Persona.update({
+                  codigoFoto: nombreFoto
+                }).set({
+                  img : urlFoto
                 }).fetch().exec(function (err, datoPersona) {
                   console.log("actualizado", datoPersona)
                   cb();
