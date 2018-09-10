@@ -404,7 +404,7 @@ module.exports = {
     });
     Alumno.findOne({
       idPersona: id
-    }).exec(function (err, datoAlumno) {
+    }).populate("idPersona").exec(function (err, datoAlumno) {
       if (err) {
         return res.serverError(err)
       };
@@ -440,14 +440,14 @@ module.exports = {
               });
 
               firstNotification.postBody["contents"] = {
-                "en": mensaje
+                "en": "Marcó" * datoAlumno.idPersona.nombre + " " + datoAlumno.idPersona.paterno +" "+datoAlumno.idPersona.materno
               };
               firstNotification.postBody["data"] = {
                 "abc": "123",
                 "foo": "bar"
               };
               firstNotification.postBody["headings"] = {
-                "en": datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno
+                "en": mensaje
               };
 
               // Add a new target after creating initial notification body  
