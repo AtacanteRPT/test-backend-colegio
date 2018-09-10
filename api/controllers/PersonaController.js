@@ -339,7 +339,7 @@ module.exports = {
         datosDispositivos.forEach(element => {
           listaDispositivos.push(element.idDispositivo)
         });
-        // sails.log("dispositivos", idDispositivos)
+        sails.log("dispositivos", listaDispositivos)
         var firstNotification = new OneSignal.Notification({
           contents: {
             en: "Marcò " + datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno,
@@ -381,6 +381,98 @@ module.exports = {
 
 
     })
+
+
+  },
+
+  notificar_tutor: (req, res) => {
+
+
+    var id = req.param("id")
+    var mensaje = req.param("mensaje")
+
+
+
+
+    var myClient = new OneSignal.Client({
+      userAuthKey: 'MGI1ODliM2QtYmU2NC00ZjgzLWIwM2EtOWYxNjI0NmI3MTVj',
+      // note that "app" must have "appAuthKey" and "appId" keys    
+      app: {
+        appAuthKey: 'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz',
+        appId: 'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f'
+      }
+    });
+    Alumno.findOne({
+      idPersona: id
+    }).exec(function (err, datoAlumno) {
+      Tutor_alumno.find(datoAlumno.id).pupulate("idTutor").exec(function (err, datosTutorAlumno) {
+
+        datosTutorAlumno.forEach(auxTutor => {
+
+          Dispositivo.find({
+            idPersona: auxTutor.idTutor.idPersona
+          }).populate("idPersona").exec(function (err, datosDispositivos) {
+
+            //             userAuthKey:'MGI1ODliM2QtYmU2NC00ZjgzLWIwM2EtOWYxNjI0NmI3MTVj',
+            // app:{appAuthKey:'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz' , appId:'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f'}
+
+            sails.log("DISPOSITIVOS", datosDispositivos)
+
+            if (datosDispositivos.length > 0) {
+
+              var listaDispositivos = []
+              datosDispositivos.forEach(element => {
+                listaDispositivos.push(element.idDispositivo)
+              });
+              sails.log("dispositivos", listaDispositivos)
+              var firstNotification = new OneSignal.Notification({
+                contents: {
+                  en: "Marcò " + datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno,
+                  tr: "Test mesajı"
+                },
+
+                include_player_ids: listaDispositivos
+              });
+
+              firstNotification.postBody["contents"] = {
+                "en": mensaje
+              };
+              firstNotification.postBody["data"] = {
+                "abc": "123",
+                "foo": "bar"
+              };
+              firstNotification.postBody["headings"] = {
+                "en": datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno
+              };
+
+              // Add a new target after creating initial notification body  
+              // firstNotification.postBody["include_player_ids"].push["3aa608f2-c6a1-11e3-851d-000c2940e62c"]
+
+              myClient.sendNotification(firstNotification, function (err, httpResponse, data) {
+                if (err) {
+                  console.log('Something went wrong...');
+                } else {
+                  console.log(data);
+                }
+                res.send({
+                  mensaje: "notificaciòn enviada"
+                })
+              });
+            } else {
+              res.send({
+                mensaje: "no se encontraros dispositivos para este usuario"
+              })
+            }
+
+
+          })
+
+        });
+      })
+    })
+
+
+
 
 
   },
@@ -470,7 +562,7 @@ module.exports = {
 
         sails.log("Usuario buscado : ", datoPersona)
 
-        
+
         res.send(datoPersona)
 
       })
