@@ -2464,7 +2464,7 @@ module.exports = {
 
 
           var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
-
+        sails.log("NOMBRE FOTO",nombreFoto)
 
           var urlFoto = (uploadedFiles[0].fd).split(path.sep);
           sails.log("fotos:", urlFoto);
