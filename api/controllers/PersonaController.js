@@ -440,7 +440,7 @@ module.exports = {
               });
 
               firstNotification.postBody["contents"] = {
-                "en": "Marcó" * datoAlumno.idPersona.nombre + " " + datoAlumno.idPersona.paterno +" "+datoAlumno.idPersona.materno
+                "en": "Marcó :" + datoAlumno.idPersona.nombre + " " + datoAlumno.idPersona.paterno +" "+datoAlumno.idPersona.materno
               };
               firstNotification.postBody["data"] = {
                 "abc": "123",
