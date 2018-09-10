@@ -2442,7 +2442,7 @@ module.exports = {
       saveAs: function (__newFileStream, cb) {
         cb(null, "TM" + __newFileStream.filename);
       },
-      maxBytes: 1000000099
+      maxBytes: 10998000000
     }, function whenDone(err, uploadedFiles) {
 
       if (err) {
@@ -2455,7 +2455,7 @@ module.exports = {
       }
 
 
-      async.each(uploadedFiles, function (file, cb) {
+      async.eachSeries(uploadedFiles, function (file, cb) {
 
           sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
@@ -2476,15 +2476,8 @@ module.exports = {
             img: url
           }).fetch().exec(function (err, datoPersona) {
             console.log("actualizado", datoPersona)
-
+            cb();
           })
-
-          cb();
-
-
-
-
-
         },
         function (error) {
           // res.send("fin")
