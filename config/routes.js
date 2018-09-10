@@ -28,6 +28,8 @@ module.exports.routes = {
     //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
     //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
+    
+
     'POST /api/persona': 'PersonaController.crear',
     'GET /persona/traer/:id': 'PersonaController.traer',
     'GET /persona/credencial/:id': 'PersonaController.credencial',
