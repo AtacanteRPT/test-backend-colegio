@@ -2473,34 +2473,25 @@ module.exports = {
           nuevasPersonas = csvjson.toObject(dato, options);
 
           async.eachSeries(nuevasPersonas, function (persona, cb) {
-              if (persona.nombre.length > 0) {
 
-                var auxAlumno = {
-                  nombre: persona.nombre,
-                  paterno: persona.paterno,
-                  materno: persona.materno,
-                  nro: persona.nro,
-                  rol: "alumno"
-                }
-                var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
+              var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
 
 
-                var urlFoto = (uploadedFiles[0].fd).split(path.sep);
-                sails.log("fotos:", urlFoto);
-                var url = "avatars//" + urlFoto[urlFoto.length - 1]
+              var urlFoto = (uploadedFiles[0].fd).split(path.sep);
+              sails.log("fotos:", urlFoto);
+              var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
-                Persona.update({
-                  codigoFoto: nombreFoto
-                }).set({
-                  img : urlFoto
-                }).fetch().exec(function (err, datoPersona) {
-                  console.log("actualizado", datoPersona)
-                  cb();
-                })
+              Persona.update({
+                codigoFoto: nombreFoto
+              }).set({
+                img: urlFoto
+              }).fetch().exec(function (err, datoPersona) {
+                console.log("actualizado", datoPersona)
 
-              } else {
-                cb();
-              }
+              })
+
+              cb();
+
 
 
             },
