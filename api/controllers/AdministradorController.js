@@ -2476,9 +2476,7 @@ module.exports = {
         }).set({
           img: url
         }).fetch().exec(function (err, datoPersona) {
-          if (err) {
-            return res.serverError(err)
-          };
+        
           console.log("actualizado", datoPersona)
           cb();
         })
