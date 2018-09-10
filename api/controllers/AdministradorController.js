@@ -2442,7 +2442,7 @@ module.exports = {
       saveAs: function (__newFileStream, cb) {
         cb(null, "TM" + __newFileStream.filename);
       },
-      maxBytes: 10000000
+      maxBytes: 1000000099
     }, function whenDone(err, uploadedFiles) {
 
       if (err) {
