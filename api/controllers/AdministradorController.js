@@ -2473,7 +2473,7 @@ module.exports = {
           Persona.update({
             codigoFoto: nombreFoto
           }).set({
-            img: urlFoto
+            img: url
           }).fetch().exec(function (err, datoPersona) {
             console.log("actualizado", datoPersona)
 
