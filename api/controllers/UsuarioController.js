@@ -22,6 +22,7 @@ module.exports = {
       console.log("PASSWORD", user.password)
       bcrypt.compare(actualPassword, user.password, function (err, datoPass) {
         if (!datoPass) {
+          res.status(403)
           res.json({
             mensaje: "password actual incorrecto "
           })
