@@ -408,7 +408,7 @@ module.exports = {
       if (err) {
         return res.serverError(err)
       };
-      Tutor_alumno.find({idAlumno: datoAlumno.id}).pupulate("idTutor").exec(function (err, datosTutorAlumno) {
+      Tutor_alumno.find({idAlumno: datoAlumno.id}).populate("idTutor").exec(function (err, datosTutorAlumno) {
         if (err) {
           return res.serverError(err)
         };
