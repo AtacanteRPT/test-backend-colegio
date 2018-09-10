@@ -29,9 +29,9 @@ module.exports = {
         }
         bcrypt.genSalt(10, function (err, salt) {
           bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
-            Usuario.update({
-              idPersona: user.id
-            }).set({
+            Usuario.update(
+              user.id
+            ).set({
               password: hash
             }).exec(function (err, datoUsuario) {
               if (err) {
