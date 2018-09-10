@@ -2457,7 +2457,7 @@ module.exports = {
 
       // async.eachSeries(uploadedFiles, function (file, cb) {
 
-      uploadedFiles.forEach((file,i) => {
+      uploadedFiles.forEach(function (file, i) {
         sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
         sails.log(file)
@@ -2467,7 +2467,7 @@ module.exports = {
         var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
         sails.log("NOMBRE FOTO", nombreFoto)
 
-        var urlFoto = (uploadedFiles[i].fd).split(path.sep);
+        var urlFoto = (file.fd).split(path.sep);
         sails.log("fotos:", urlFoto);
         var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
@@ -2476,6 +2476,9 @@ module.exports = {
         }).set({
           img: url
         }).fetch().exec(function (err, datoPersona) {
+          if (err) {
+            return res.serverError(err)
+          };
           console.log("actualizado", datoPersona)
           cb();
         })
