@@ -2455,35 +2455,39 @@ module.exports = {
       }
 
 
-      async.eachSeries(uploadedFiles, function (file, cb) {
+      // async.eachSeries(uploadedFiles, function (file, cb) {
 
-          sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+      uploadedFiles.forEach((file,i) => {
+        sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-          sails.log(file)
-          sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        sails.log(file)
+        sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 
-          var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
-        sails.log("NOMBRE FOTO",nombreFoto)
+        var nombreFoto = parseInt(file.filename.substring(4, 8)) + "";
+        sails.log("NOMBRE FOTO", nombreFoto)
 
-          var urlFoto = (uploadedFiles[0].fd).split(path.sep);
-          sails.log("fotos:", urlFoto);
-          var url = "avatars//" + urlFoto[urlFoto.length - 1]
+        var urlFoto = (uploadedFiles[i].fd).split(path.sep);
+        sails.log("fotos:", urlFoto);
+        var url = "avatars//" + urlFoto[urlFoto.length - 1]
 
-          Persona.update({
-            codigoFoto: nombreFoto
-          }).set({
-            img: url
-          }).fetch().exec(function (err, datoPersona) {
-            console.log("actualizado", datoPersona)
-            cb();
-          })
-        },
-        function (error) {
-          // res.send("fin")
+        Persona.update({
+          codigoFoto: nombreFoto
+        }).set({
+          img: url
+        }).fetch().exec(function (err, datoPersona) {
+          console.log("actualizado", datoPersona)
+          cb();
+        })
+      });
 
-          sails.log("-------------------FINAL DE TODO -----------------------")
-        });
+
+      // },
+      // function (error) {
+      //   // res.send("fin")
+
+      //   sails.log("-------------------FINAL DE TODO -----------------------")
+      // });
 
       res.send("OTRA ALTERNATIVA")
 
