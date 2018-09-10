@@ -405,8 +405,13 @@ module.exports = {
     Alumno.findOne({
       idPersona: id
     }).exec(function (err, datoAlumno) {
+      if (err) {
+        return res.serverError(err)
+      };
       Tutor_alumno.find(datoAlumno.id).pupulate("idTutor").exec(function (err, datosTutorAlumno) {
-
+        if (err) {
+          return res.serverError(err)
+        };
         datosTutorAlumno.forEach(auxTutor => {
 
           Dispositivo.find({
@@ -454,20 +459,23 @@ module.exports = {
                 } else {
                   console.log(data);
                 }
-                res.send({
-                  mensaje: "notificaciòn enviada"
-                })
+
               });
             } else {
-              res.send({
-                mensaje: "no se encontraros dispositivos para este usuario"
-              })
+              // res.send({
+              //   mensaje: "no se encontraros dispositivos para este usuario"
+              // })
             }
 
 
           })
 
         });
+
+        res.send({
+          mensaje: "notificaciòn enviada"
+        })
+
       })
     })
 
