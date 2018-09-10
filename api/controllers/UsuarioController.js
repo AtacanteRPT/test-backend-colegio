@@ -17,13 +17,11 @@ module.exports = {
       nuevoPassword = req.param("nuevoPassword")
     Usuario.findOne({
       idPersona: req.user.id
-    }, function (err, user) {
-      if (err) return cb(err);
-      if (!user) return cb(null, false, {
-        message: 'Usuario No encontrado'
-      });
-      bcrypt.compare(actualPassword, user.password, function (err, res) {
-        if (!res) {
+    }).exec(function (err, user) {
+
+      console.log("PASSWORD", user.password)
+      bcrypt.compare(actualPassword, user.password, function (err, datoPass) {
+        if (!datoPass) {
           res.json({
             mensaje: "password actual incorrecto "
           })
@@ -31,10 +29,13 @@ module.exports = {
         bcrypt.genSalt(10, function (err, salt) {
           bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
             Usuario.update({
-              idPersona: id
+              idPersona: user.id
             }).set({
               password: hash
             }).exec(function (err, datoUsuario) {
+              if (err) {
+                return res.serverError(err);
+              }
               res.json({
                 mensaje: 'cambio de password exitoso'
               })
@@ -44,6 +45,7 @@ module.exports = {
         // sails.log("Passport.js - userDetails", userDetails)
       });
     });
+
   },
   resetearPassword: function (req, res) {
     var id = req.param("id")
