@@ -68,7 +68,7 @@ module.exports = {
     cedula: {
       type: 'string',
       required: false,
-      unique: true,
+      // unique: true,
       allowNull: true
     },
     expedido: {

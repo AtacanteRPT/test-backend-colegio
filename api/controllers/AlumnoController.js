@@ -193,9 +193,11 @@ module.exports = {
 
           }, function (error) {
 
+           var auxListaAlumnosCurso =  _.orderBy(alumnosCurso,["paterno","materno","nombre"],["asc","asc","asc"])
+
             if (error) return res.negotiate(error);
             sails.log("alumnos por curso length", alumnosCurso.length)
-            return res.send(alumnosCurso)
+            return res.send(auxListaAlumnosCurso)
 
           });
         })
