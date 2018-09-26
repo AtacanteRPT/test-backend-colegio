@@ -68,6 +68,7 @@ module.exports = {
 
   },
   crear: function (req, res) {
+    sails.log("BODY",req.body)
 
     var nuevaPersona = {
       identificacion: req.param('cedula'),
