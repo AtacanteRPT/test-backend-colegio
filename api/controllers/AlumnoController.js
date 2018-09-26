@@ -194,7 +194,7 @@ module.exports = {
           }, function (error) {
 
            var auxListaAlumnosCurso =  _.orderBy(alumnosCurso,["paterno","materno","nombre"],["asc","asc","asc"])
-
+            sails.log("AUX LISTA ALUMNOS CURSO",auxListaAlumnosCurso)
             if (error) return res.negotiate(error);
             sails.log("alumnos por curso length", alumnosCurso.length)
             return res.send(auxListaAlumnosCurso)
