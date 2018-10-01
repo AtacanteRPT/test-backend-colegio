@@ -883,13 +883,11 @@ module.exports = {
         var code = qr.image(codigoQr, {
           type: 'png'
         });
-  
-        var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoAlumno.nro + '.jpg'))
-  
+        var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoAlumno.nro + '.jpg'))  
         code.pipe(output);
       });
 
-      cb();
+      res.send("codigos QR")
     })
   },
   adicionarAdminFab: function (req, res) {
