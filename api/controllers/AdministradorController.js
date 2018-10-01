@@ -796,12 +796,12 @@ module.exports = {
             sails.log("Persona desde el CSV", persona)
             cursoId = persona.idCurso;
             var identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0)
-            rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function (data, response) {
+            rest.postJson('http://www.moswara.com:48000/api/persona', persona).on('complete', function (data, response) {
               // handle response
               console.log('Persona Creada', data)
               if (persona.idCurso.length > 0) {
 
-                rest.postJson('http://localhost:1337/inscribe/inscribir', {
+                rest.postJson('http://www.moswara.com:48000/inscribe/inscribir', {
                   id: data.id,
                   idCurso: persona.idCurso,
                   idGestionAcademica: 1
@@ -816,9 +816,24 @@ module.exports = {
 
               Persona.update(data.id, {
                 identificacion: data.id + "-" + identificacion
-              }).exec(function (err, datoALumno) {
+              }).fetch().exec(function (err, datoALumno) {
 
+                var codigoQr = datoAlumno.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                var code = qr.image(codigoQr, {
+                  type: 'png'
+                });
                 sails.log("personaEncontrada:", datoALumno)
+
+                var dir = './assets/codigos/domingo_savio/' +"turno_tarde_nuevos"+ "/"
+
+                if (!fs.existsSync(dir)) {
+                  fs.mkdirSync(dir);
+
+                }
+
+                var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoALumno.nro + '.jpg'))
+
+                code.pipe(output);
 
                 cb();
               })
@@ -832,11 +847,6 @@ module.exports = {
           // }, this);
         }, function (error) {
 
-          rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + cursoId).on('complete', function (data, response) {
-            // handle response
-            console.log("Creado codigos QR para ", cursoId)
-
-          });
           sails.log("-------------------FINAL LISTA -----------------------")
           callback(null);
           // return res.send("tutores")
@@ -2476,7 +2486,7 @@ module.exports = {
         }).set({
           img: url
         }).fetch().exec(function (err, datoPersona) {
-        
+
           console.log("actualizado", datoPersona)
           cb();
         })
