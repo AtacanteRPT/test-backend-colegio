@@ -816,22 +816,22 @@ module.exports = {
 
               Persona.update(data.id, {
                 identificacion: data.id + "-" + identificacion
-              }).fetch().exec(function (err, datoALumno) {
+              }).fetch().exec(function (err, datoAlumno) {
 
                 var codigoQr = datoAlumno.identificacion + '$2018$' + 'Colegio Domingo Savio '
                 var code = qr.image(codigoQr, {
                   type: 'png'
                 });
-                sails.log("personaEncontrada:", datoALumno)
+                sails.log("personaEncontrada:", datoAlumno)
 
-                var dir = './assets/codigos/domingo_savio/' +"turno_tarde_nuevos"+ "/"
+                var dir = './assets/codigos/domingo_savio/' + "turno_tarde_nuevos" + "/"
 
                 if (!fs.existsSync(dir)) {
                   fs.mkdirSync(dir);
 
                 }
 
-                var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoALumno.nro + '.jpg'))
+                var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoAlumno.nro + '.jpg'))
 
                 code.pipe(output);
 
