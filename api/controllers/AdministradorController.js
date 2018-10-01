@@ -868,13 +868,29 @@ module.exports = {
 
   },
   generarCodigosDomingoSavio: function (req, res) {
-    for (var index = 1; index <= 27; index++) {
-      rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + index).on('complete', function (data, response) {
-        // handle respons
+    Persona.find({id:{'>=':4717}}).exec(function (err, datoAlumnos) {
 
+      var dir = './assets/codigos/domingo_savio/' + "turno_tarde_nuevos" + "/"
+
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+
+      datoAlumnos.forEach(datoAlumno => {
+        sails.log("personaEncontrada:", datoAlumno)
+
+        var codigoQr = datoAlumno.identificacion + '$2018$' + 'Colegio Domingo Savio '
+        var code = qr.image(codigoQr, {
+          type: 'png'
+        });
+  
+        var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoAlumno.nro + '.jpg'))
+  
+        code.pipe(output);
       });
-    }
-    res.send("TODO A ACABADO")
+
+      cb();
+    })
   },
   adicionarAdminFab: function (req, res) {
 
