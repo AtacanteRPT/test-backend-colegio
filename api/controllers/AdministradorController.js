@@ -2256,7 +2256,7 @@ module.exports = {
           // });
 
 
-
+          sails.log("LENGTH:",personas.length)
           res.send(personas)
           // return res.send("tutores")
         });
