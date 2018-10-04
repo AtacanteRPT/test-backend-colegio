@@ -868,7 +868,11 @@ module.exports = {
 
   },
   generarCodigosDomingoSavio: function (req, res) {
-    Persona.find({id:{'>=':4717}}).exec(function (err, datoAlumnos) {
+    Persona.find({
+      id: {
+        '>=': 4717
+      }
+    }).exec(function (err, datoAlumnos) {
 
       var dir = './assets/codigos/domingo_savio/' + "turno_tarde_nuevos" + "/"
 
@@ -883,7 +887,7 @@ module.exports = {
         var code = qr.image(codigoQr, {
           type: 'png'
         });
-        var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoAlumno.nro + '.jpg'))  
+        var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoAlumno.nro + '.jpg'))
         code.pipe(output);
       });
 
@@ -2193,10 +2197,11 @@ module.exports = {
       async.each(datoPersonas, function (element, cb) {
 
 
-          if (element.rol != "tutor") {
-            var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.codigoFoto,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno,tmpInscribe.codigoFoto, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre,tmpAlumno.codigoFoto, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.codigoFoto, p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = ? and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
-
-            Persona.query(query, [element.identificacion], function (err, consulta) {
+          if (element.rol == "alumno") {
+            var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = $1 and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
+            sails.sendNativeQuery(query, [element.identificacion], function (err, result) {
+              var consulta = result.rows;
+              // Persona.query(query, [element.identificacion], function (err, consulta) {
               if (err) {
                 return res.serverError(err);
               }
