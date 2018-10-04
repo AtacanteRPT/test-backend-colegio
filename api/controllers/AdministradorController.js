@@ -2203,11 +2203,11 @@ module.exports = {
               if (err) {
                 return res.serverError(err);
               }
-              if (result.rows != undefined) {
+              if (result.rows[0] != undefined) {
                 var consulta = result.rows;
 
-                if (consulta[0] != undefined) {
-                  var auxConsulta = consulta[0].img;
+                var auxConsulta = consulta[0].img;
+                if (auxConsulta != null) {
                   sails.log("IMG", auxConsulta)
                   if (auxConsulta.length == 0) {
                     personas.push(consulta[0]);
