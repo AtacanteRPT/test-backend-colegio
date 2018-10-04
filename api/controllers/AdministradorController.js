@@ -2206,8 +2206,8 @@ module.exports = {
               if (result.rows != undefined) {
                 var consulta = result.rows;
 
-                var auxConsulta = consulta[0].img;
-                if (auxConsulta != null) {
+                if (consulta[0].img != null) {
+                  var auxConsulta = consulta[0].img;
                   sails.log("IMG", auxConsulta)
                   if (auxConsulta.length == 0) {
                     personas.push(consulta[0]);
@@ -2245,15 +2245,15 @@ module.exports = {
           //     res.send(estudiantes)
           // });
 
-          stringify(personas, function (err, output) {
-            fs.writeFile('fotos_faltantes.csv', output, 'utf8', function (err) {
-              if (err) {
-                console.log('Some error occured - file either not saved or corrupted file saved.');
-              } else {
-                console.log('It\'s saved!');
-              }
-            });
-          });
+          // stringify(personas, function (err, output) {
+          //   fs.writeFile('fotos_faltantes.csv', output, 'utf8', function (err) {
+          //     if (err) {
+          //       console.log('Some error occured - file either not saved or corrupted file saved.');
+          //     } else {
+          //       console.log('It\'s saved!');
+          //     }
+          //   });
+          // });
 
 
 
