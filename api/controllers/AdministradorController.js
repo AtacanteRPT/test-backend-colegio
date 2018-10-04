@@ -2206,7 +2206,7 @@ module.exports = {
               if (result.rows != undefined) {
                 var consulta = result.rows;
 
-                if (consulta[0].img != undefined) {
+                if (consulta[0] != undefined) {
                   var auxConsulta = consulta[0].img;
                   sails.log("IMG", auxConsulta)
                   if (auxConsulta.length == 0) {
