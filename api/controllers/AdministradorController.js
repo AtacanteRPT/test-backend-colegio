@@ -2200,23 +2200,24 @@ module.exports = {
           if (element.rol == "alumno") {
             var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = $1 and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
             sails.sendNativeQuery(query, [element.identificacion], function (err, result) {
-              var consulta = result.rows;
-              // Persona.query(query, [element.identificacion], function (err, consulta) {
               if (err) {
                 return res.serverError(err);
               }
-              var auxConsulta = consulta[0].img;
-              if (auxConsulta != null) {
-                sails.log("IMG", auxConsulta)
-                if (auxConsulta.length == 0) {
+              if (result.rows != undefined) {
+                var consulta = result.rows;
+
+                var auxConsulta = consulta[0].img;
+                if (auxConsulta != null) {
+                  sails.log("IMG", auxConsulta)
+                  if (auxConsulta.length == 0) {
+                    personas.push(consulta[0]);
+                  }
+                } else {
                   personas.push(consulta[0]);
                 }
-              } else {
-                personas.push(consulta[0]);
               }
-
-
               cb();
+              // Persona.query(query, [element.identificacion], function (err, consulta) {
             });
           } else {
             cb();
