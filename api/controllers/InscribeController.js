@@ -17,7 +17,7 @@ module.exports = {
 
             // console.log("entrando en la consulta")
             if (datoPersona != undefined) {
-                Inscribe.create({ idAlumno: datoPersona.id, idCurso: idCurso, idGestionAcademica: idGestionAcademica }).exec((err, datoInscribe) => {
+                Inscribe.create({ idAlumno: datoPersona.id, idCurso: idCurso, idGestionAcademica: idGestionAcademica }).fetch().exec((err, datoInscribe) => {
                     res.send(datoInscribe)
                 });
             } else {

@@ -137,14 +137,14 @@ module.exports = {
 
           Asistencia.findOne({
             idPersona: resultado.idPersona,
-            fecha: fecha2
+            fecha: fecha
           }).exec((err, datoAsistencia) => {
             console.log('fechaAsistencia', datoAsistencia)
 
-            if (!datoAsistencia) {
+            if (datoAsistencia == null) {
               console.log('paso 2 creando nuevo')
               Asistencia.create({
-                  fecha: fecha2,
+                  fecha: fecha,
                   estado: 'asistió',
                   hora_llegada: horaActual,
                   hora_salida: horaActual,

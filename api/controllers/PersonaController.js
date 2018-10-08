@@ -68,10 +68,10 @@ module.exports = {
 
   },
   crear: function (req, res) {
-    sails.log("BODY",req.body)
+    sails.log("BODY", req.body)
 
     var nuevaPersona = {
-      identificacion: req.param('cedula'),
+      identificacion: req.param('identifiacion'),
       nombre: req.param('nombre'),
       email: req.param('email'),
       paterno: req.param('paterno'),
@@ -409,7 +409,9 @@ module.exports = {
       if (err) {
         return res.serverError(err)
       };
-      Tutor_alumno.find({idAlumno: datoAlumno.id}).populate("idTutor").exec(function (err, datosTutorAlumno) {
+      Tutor_alumno.find({
+        idAlumno: datoAlumno.id
+      }).populate("idTutor").exec(function (err, datosTutorAlumno) {
         if (err) {
           return res.serverError(err)
         };
@@ -433,7 +435,7 @@ module.exports = {
               sails.log("dispositivos", listaDispositivos)
               var firstNotification = new OneSignal.Notification({
                 contents: {
-                  en:  datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno,
+                  en: datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno,
                   tr: "Test mesajı"
                 },
 
@@ -441,7 +443,7 @@ module.exports = {
               });
 
               firstNotification.postBody["contents"] = {
-                "en": datoAlumno.idPersona.nombre + " " + datoAlumno.idPersona.paterno +" "+datoAlumno.idPersona.materno
+                "en": datoAlumno.idPersona.nombre + " " + datoAlumno.idPersona.paterno + " " + datoAlumno.idPersona.materno
               };
               firstNotification.postBody["data"] = {
                 "abc": "123",
@@ -836,5 +838,8 @@ module.exports = {
     }
 
   },
+  listar: function (req, res) {
+    
+  }
 
 };
