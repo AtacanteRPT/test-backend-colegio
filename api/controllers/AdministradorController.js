@@ -19,6 +19,7 @@ var rest = require('restler');
 var qr = require('qr-image');
 
 var stringify = require('csv-stringify');
+var unirest = require('unirest');
 
 
 
@@ -2256,7 +2257,7 @@ module.exports = {
           // });
 
 
-          sails.log("LENGTH:",personas.length)
+          sails.log("LENGTH:", personas.length)
           res.send(personas)
           // return res.send("tutores")
         });
@@ -2304,21 +2305,35 @@ module.exports = {
           };
 
           nuevasPersonas = csvjson.toObject(dato, options);
-
           async.each(nuevasPersonas, function (persona, cb) {
+              // ¿¿¿¿¿¿¿¿¿¿¿¿¿¿  nuevasPersonas ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+              var alumnosCurso = [];
+              var auxPersona = {}
+              Inscribe.find({
+                idCurso: persona.idCurso
+              }).populate('idAlumno').exec(function (err, inscripciones) {
+                async.eachSeries(inscripciones, function (inscripcion, cb2) {
 
-              var estudiante = recortarNombre2(persona.Estudiante)
-              estudiante.nro = persona["Nº"]
+                  Persona.findOne(inscripcion.idAlumno.idPersona).exec(function (err, alumno) {
+                    cb2();
+                  })
+                }, function (error) {
 
-              sails.log("Estudiante", estudiante)
-              Persona.update(estudiante, {
-                codigoFoto: persona["Código"]
-              }).fetch().exec(function (err, datoPersona) {
+                  if (error) return res.negotiate(error);
+                  sails.log("tamaño", inscripciones.length)
+                  sails.log("es curso ", inscripciones[0].idCurso)
+                  auxPersona = alumnosCurso.find(function (element) {
+                    return element.nro == persona.nro
+                  })
 
-                sails.log("se actualizo :", datoPersona)
-                cb()
+
+
+                });
+
               })
 
+
+              // ¿¿¿¿¿¿¿¿¿¿¿¿¿¿  nuevasPersonas ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
 
               // }, this);
             },
@@ -2331,12 +2346,13 @@ module.exports = {
 
         },
         function (error) {
+          sails.log("-------------------FINAL TODO -----------------------")
+
           res.send("fin")
         });
 
 
     });
-
 
 
   },
@@ -2526,5 +2542,89 @@ module.exports = {
 
 
 
+  },
+  actualizarFotos: function (req, res) {
+
+    var files = [];
+    req.file('files').upload({
+      // ~10MB
+      dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
+      saveAs: function (__newFileStream, cb) {
+        cb(null, "TT" + __newFileStream.filename);
+      },
+      maxBytes: 10000000
+    }, function whenDone(err, uploadedFiles) {
+
+      if (err) {
+        return res.negotiate(err);
+      }
+
+      // If no files were uploaded, respond with an error.
+      if (uploadedFiles.length === 0) {
+        return res.badRequest('No file was uploaded');
+      }
+
+
+      async.eachSeries(uploadedFiles, function (file, callback) {
+
+          sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+          sails.log(file)
+          sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+          var nuevasPersonas = [];
+          var dato = fs.readFileSync(file.fd, {
+            encoding: 'utf8'
+          });
+          var options = {
+            delimiter: ',', // optional
+            quote: '"' // optional
+          };
+
+          nuevasPersonas = csvjson.toObject(dato, options);
+
+          async.eachSeries(nuevasPersonas, function (persona, cb) {
+              unirest.post('http://mockbin.com/request')
+                .headers({
+                  'Content-Type': 'multipart/form-data'
+                })
+                .field('parameter', 'value') // Form field
+                .attach('file', '/tmp/file') // Attachment
+                .end(function (response) {
+                  console.log(response.body);
+                });
+
+
+            },
+            function (error) {
+
+
+              sails.log("-------------------FINAL LISTA -----------------------")
+              callback(null);
+              // return res.send("tutores")
+            });
+
+        },
+        function (error) {
+          // res.send("fin")
+
+          sails.log("-------------------FINAL DE TODO -----------------------")
+        });
+
+      res.send("OTRA ALTERNATIVA")
+
+    });
+
+
+
   }
+,
+  updateCreacion:function(req,res){
+    for (let index = 1; index < 4700; index++) {
+      Persona.update(index).set({updatedAt : 1539479010800, createdAt :1539479010800 }).exec(function(err,datoPerons){
+        Sails.log("INDEX ", index)
+      });
+    }
+    res.send("Todo actualizado")
+  }
+
 };
