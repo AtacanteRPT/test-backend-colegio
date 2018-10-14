@@ -2620,7 +2620,7 @@ module.exports = {
 ,
   updateCreacion:function(req,res){
     for (let index = 1; index < 4571; index++) {
-      Usuario.update(index).set({updatedAt : 1539479010800, createdAt :1539479010800 }).exec(function(err,datoPerons){
+      Usuario.update(index).set({createdAt :1539479010800 }).exec(function(err,datoPerons){
         Sails.log("INDEX ", index)
       });
     }
