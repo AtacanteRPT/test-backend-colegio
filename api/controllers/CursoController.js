@@ -7,6 +7,7 @@
 
 
 var rest = require('restler');
+require('../../configuracion')
 
 module.exports = {
 
@@ -367,7 +368,7 @@ module.exports = {
 
         var idTurno = req.param("id")
 
-        rest.get('http://localhost:1337/curso/mostrar_turno2/' + idTurno).on('complete', function(result) {
+        rest.get(DOMINIO_A2HOSTING +'curso/mostrar_turno2/' + idTurno).on('complete', function(result) {
                 sails.log(result.grados[2])
                 auxLista = result;
                 var auxGrados = []
