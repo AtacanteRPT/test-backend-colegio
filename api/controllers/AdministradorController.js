@@ -615,12 +615,12 @@ module.exports = {
             sails.log("Persona desde el CSV", persona)
             cursoId = persona.idCurso;
             var identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
-            rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function (data, response) {
+            rest.postJson('http://moswara.com:48000/api/persona', persona).on('complete', function (data, response) {
               // handle response
               console.log('Persona Creada', data)
               if (persona.idCurso.length > 0) {
 
-                rest.postJson('http://localhost:1337/inscribe/inscribir', {
+                rest.postJson('http://moswara.com:48000/inscribe/inscribir', {
                   id: data.id,
                   idCurso: persona.idCurso,
                   idGestionAcademica: 1
@@ -2550,7 +2550,7 @@ module.exports = {
       // ~10MB
       dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
       saveAs: function (__newFileStream, cb) {
-        cb(null, "TT" + __newFileStream.filename);
+        cb(null, "TM" + __newFileStream.filename);
       },
       maxBytes: 10000000
     }, function whenDone(err, uploadedFiles) {
@@ -2583,15 +2583,86 @@ module.exports = {
           nuevasPersonas = csvjson.toObject(dato, options);
 
           async.eachSeries(nuevasPersonas, function (persona, cb) {
-              unirest.post('http://mockbin.com/request')
-                .headers({
-                  'Content-Type': 'multipart/form-data'
-                })
-                .field('parameter', 'value') // Form field
-                .attach('file', '/tmp/file') // Attachment
-                .end(function (response) {
-                  console.log(response.body);
+
+              // ¿¿¿¿¿¿¿¿¿¿¿¿¿¿  nuevasPersonas ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+              var alumnosCurso = [];
+              var auxPersona = {}
+              Inscribe.find({
+                idCurso: persona.idCurso
+              }).populate('idAlumno').exec(function (err, inscripciones) {
+                async.eachSeries(inscripciones, function (inscripcion, cb2) {
+
+                  Persona.findOne(inscripcion.idAlumno.idPersona).exec(function (err, alumno) {
+
+                    if (alumno != undefined) {
+                      if (alumno.img != null) {
+                        if (alumno.img.length == 0) {
+                          alumnosCurso.push(alumno)
+                        }
+                      } else {
+                        alumnosCurso.push(alumno)
+                      }
+                    }
+                    //  alumnosCurso.push(alumno)
+                    cb2();
+                  })
+                }, function (error) {
+
+                  if (error) return res.negotiate(error);
+                  // sails.log("tamaño", inscripciones.length)
+                  // sails.log("Persona", alumnosCurso)
+                  auxPersona = alumnosCurso.find(function (element) {
+                    return element.nro == persona.nro
+                  })
+                  sails.log("AUX PERSONA : ", auxPersona)
+
+                  if (auxPersona != undefined) {
+
+                    var auxConsulta = auxPersona.img;
+                    if (auxConsulta == null) {
+                      sails.log("persona.foto",persona.foto)
+
+                      // var auxImg = fs.createReadStream('C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/' + persona.foto)
+                      // var imgStats = fs.statSync('C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/' + persona.foto)
+                      // sails.log("IMG",auxImg)
+                      unirest.post("http://localhost:1337/persona/avatar/" + auxPersona.id)
+                        .headers({
+                          'Content-Type': 'multipart/form-data'
+                          // "Content-Length":imgStats.size
+                        })
+                        .attach('avatar','C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/'+ persona.foto) // Attachment
+                        .end(function (response) {
+                          console.log(response.body);
+                        });
+                        cb();
+                    } else {
+                      if (auxConsulta.length == 0) {
+                        unirest.post("http://localhost:1337/persona/avatar/" + auxPersona.id)
+                        .headers({
+                          'Content-Type': 'multipart/form-data'
+                          // "Content-Length":9999999
+
+                        })
+                        .attach('avatar', 'C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/' + persona.foto) // Attachment
+                        .end(function (response) {
+                          console.log(response.body);
+                        });
+                      }
+                      cb();
+                    }
+                  }else{
+                    cb();
+                  }
+
+
+
                 });
+
+              })
+
+
+              // ¿¿¿¿¿¿¿¿¿¿¿¿¿¿  nuevasPersonas ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+
 
 
             },
@@ -2616,12 +2687,13 @@ module.exports = {
 
 
 
-  }
-,
-  updateCreacion:function(req,res){
-    for (let index = 1; index < 4571; index++) {
-      Usuario.update(index).set({createdAt :1539479010800 }).exec(function(err,datoPerons){
-        Sails.log("INDEX ", index)
+  },
+  updateCreacion: function (req, res) {
+    for (let index = 1; index < 1938; index++) {
+      Inscribe.update(index).set({
+        createdAt: 1539479010800
+      }).fetch().exec(function (err, datoPerons) {
+        sails.log("INDEX ", index)
       });
     }
     res.send("Todo actualizado")
