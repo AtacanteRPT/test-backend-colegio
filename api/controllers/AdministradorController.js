@@ -723,14 +723,8 @@ module.exports = {
 
       }, function (error) {
 
-        rest.get('http://localhost:1337/administrador/actualizarIdentificaciones').on('complete', function (data2, response2) {
-          rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + index).on('complete', function (data, response) {
-            // handle response
-            res.send("TODO A ACABADO")
 
-          });
-
-        });
+        res.send("TODO A ACABADO")
 
 
 
@@ -2620,7 +2614,7 @@ module.exports = {
 
                     var auxConsulta = auxPersona.img;
                     if (auxConsulta == null) {
-                      sails.log("persona.foto",persona.foto)
+                      sails.log("persona.foto", persona.foto)
 
                       // var auxImg = fs.createReadStream('C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/' + persona.foto)
                       // var imgStats = fs.statSync('C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/' + persona.foto)
@@ -2630,27 +2624,27 @@ module.exports = {
                           'Content-Type': 'multipart/form-data'
                           // "Content-Length":imgStats.size
                         })
-                        .attach('avatar','C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/'+ persona.foto) // Attachment
+                        .attach('avatar', 'C:/Users/oso/Desktop/turno mañana/' + persona.idCurso + '/' + persona.foto) // Attachment
                         .end(function (response) {
                           console.log(response.body);
                         });
-                        cb();
+                      cb();
                     } else {
                       if (auxConsulta.length == 0) {
                         unirest.post("http://localhost:1337/persona/avatar/" + auxPersona.id)
-                        .headers({
-                          'Content-Type': 'multipart/form-data'
-                          // "Content-Length":9999999
+                          .headers({
+                            'Content-Type': 'multipart/form-data'
+                            // "Content-Length":9999999
 
-                        })
-                        .attach('avatar', 'C:/Users/oso/Desktop/turno mañana/'+persona.idCurso+'/' + persona.foto) // Attachment
-                        .end(function (response) {
-                          console.log(response.body);
-                        });
+                          })
+                          .attach('avatar', 'C:/Users/oso/Desktop/turno mañana/' + persona.idCurso + '/' + persona.foto) // Attachment
+                          .end(function (response) {
+                            console.log(response.body);
+                          });
                       }
                       cb();
                     }
-                  }else{
+                  } else {
                     cb();
                   }
 
