@@ -2691,6 +2691,28 @@ module.exports = {
       });
     }
     res.send("Todo actualizado")
+  },
+  eliminarCursos: function (req, res) {
+    Inscribe.find({
+      idCurso: 31
+    }).populate('idAlumno').exec(function (err, inscripciones) {
+        var alumnosCurso = [];
+
+        async.forEach(inscripciones, function (inscripcion, cb) {
+          Inscribe.destroy(inscripcion.id).exec(function(err,datoInscribe){
+            console.log("eliminado", datoInscribe)
+          })
+        }, function (error) {
+
+          if (error) return res.negotiate(error);
+          sails.log("tamaño", inscripciones.length)
+          sails.log("es curso ", inscripciones[0].idCurso)
+          return res.send(alumnosCurso)
+        });
+
+      })
+
+    })
   }
 
 };
