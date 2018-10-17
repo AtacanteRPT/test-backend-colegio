@@ -1660,9 +1660,9 @@ module.exports = {
               Persona.find(estudiante).exec(function (err, auxDatoEstudiante) {
                 var datoEstudiante = auxDatoEstudiante[0]
                 if (datoEstudiante != undefined) {
-
+                  sails.log("datoEstudiante",datoEstudiante)
                   async.series([
-                    function (callb) {
+                    function (callb1) {
                       if (persona.ci_tutor1.length > 0) {
 
                         var tutor1 = recortarNombre(persona.tutor1);
@@ -1693,15 +1693,15 @@ module.exports = {
                               adicionar_tutor_alumno(datoTutor1, datoEstudiante);
                             }
                             console.log("@@@@@@@@@@ 1111 @@@@@@@@@@")
-                            callb(null);
+                            callb1(null);
 
                           });
                       } else {
-                        callb(null);
+                        callb1(null);
                       }
 
                     },
-                    function (callb) {
+                    function (callb2) {
                       if (persona.ci_tutor2.length > 0) {
 
                         var tutor2 = recortarNombre(persona.tutor2);
@@ -1732,14 +1732,14 @@ module.exports = {
                               adicionar_tutor_alumno(datoTutor2, datoEstudiante);
                             }
                             console.log("@@@@@@@@@@ 2222 @@@@@@@@@@")
-                            callb(null);
+                            callb2(null);
                           });
                       } else {
-                        callb(null);
+                        callb2(null);
                       }
 
                     },
-                    function (callb) {
+                    function (callb3) {
                       if (persona.ci_tutor3.length > 0) {
 
                         var tutor3 = recortarNombre(persona.tutor3);
@@ -1768,14 +1768,14 @@ module.exports = {
                               adicionar_tutor_alumno(datoTutor3, datoEstudiante);
                             }
                             console.log("@@@@@@@@@@ 3333 @@@@@@@@@@")
-                            callb(null);
+                            callb3(null);
                           });
                       } else {
-                        callb(null);
+                        callb3(null);
                       }
 
                     },
-                    function (callb) {
+                    function (callb4) {
 
                       if (persona.ci_tutor4.length > 0) {
 
@@ -1806,10 +1806,10 @@ module.exports = {
 
                             }
                             console.log("@@@@@@@@@@ 4444 @@@@@@@@@@")
-                            callb(null);
+                            callb4(null);
                           });
                       } else {
-                        callb(null);
+                        callb4(null);
                       }
 
 
