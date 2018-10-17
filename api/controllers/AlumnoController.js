@@ -193,7 +193,7 @@ module.exports = {
 
           }, function (error) {
 
-          //  var auxListaAlumnosCurso =  _.orderBy(alumnosCurso,["paterno","materno","nombre"],["asc","asc","asc"])
+            //  var auxListaAlumnosCurso =  _.orderBy(alumnosCurso,["paterno","materno","nombre"],["asc","asc","asc"])
             // sails.log("AUX LISTA ALUMNOS CURSO",auxListaAlumnosCurso)
             if (error) return res.negotiate(error);
             sails.log("alumnos por curso length", alumnosCurso.length)
@@ -231,13 +231,26 @@ module.exports = {
 
       }, function (error) {
 
-        
+
         res.json(obej)
       })
 
 
     })
 
+  },
+  eliminar_alumno: function (req, res) {
+    var id = req.param("id")
+
+      Alumno.findOne({idPersona:id}).exec(function (err, datoAlumno) {
+        Inscribe.destroy({idAlumno:datoAlumno.id}).exec(function(err,eliminadoInscribe){
+          Alumno.destroy(datoAlumno.id).exec(function(err,eliminadoAlumno){
+            Persona.destroy(id).exec(function(err,eliminadoPersona){
+              res.send(eliminadoPersona)
+            })
+          })
+        })
+      })
   }
 
 };

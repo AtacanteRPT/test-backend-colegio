@@ -34,6 +34,8 @@ module.exports.routes = {
     'GET /persona/traer/:id': 'PersonaController.traer',
     'GET /persona/credencial/:id': 'PersonaController.credencial',
     'GET /usuario/resetearPassword/:id': 'UsuarioController.resetearPassword',
+    'GET /persona/eliminar_alumno/:id': 'AlumnoController.eliminar_alumno',
+
 
     'GET /persona/buscar/:nombre': 'PersonaController.buscar',
     'GET /persona/buscar_tutor/:nombre': 'PersonaController.buscar_tutor',
