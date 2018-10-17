@@ -1648,9 +1648,10 @@ module.exports = {
             b = 1,
             c = 1,
             d = 1;
+            sails.log("nuevaspersonas.length :",nuevasPersonas.length)
           async.eachSeries(nuevasPersonas, function (persona, cb) {
 
-
+            sails.log("PERSONA DEDE CSV : ", persona)
               var estudiante = {}
               estudiante.nombre = persona.nombre
               estudiante.paterno = persona.paterno
