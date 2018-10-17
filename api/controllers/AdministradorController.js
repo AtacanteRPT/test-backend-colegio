@@ -819,7 +819,7 @@ module.exports = {
                 });
                 sails.log("personaEncontrada:", datoAlumno)
 
-                var dir = './assets/codigos/domingo_savio/' + "turno_tarde_nuevos" + "/"
+                var dir = './assets/codigos/domingo_savio/' + "turno_mañana_nuevos" + "/"
 
                 if (!fs.existsSync(dir)) {
                   fs.mkdirSync(dir);
