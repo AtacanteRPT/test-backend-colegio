@@ -1592,7 +1592,7 @@ module.exports = {
       // ~10MB
       dirname: require('path').resolve(sails.config.appPath, 'assets/otros/cvs'),
       saveAs: function (__newFileStream, cb) {
-        cb(null, "domingo_faltantes" + __newFileStream.filename);
+        cb(null, "domingo_faltantes_t_" + __newFileStream.filename);
       },
       maxBytes: 10000000
     }, function whenDone(err, uploadedFiles) {
@@ -1657,14 +1657,12 @@ module.exports = {
               estudiante.materno = persona.materno
               // estudiante.nro = persona.nro
 
-              Persona.findOne(estudiante).exec(function (err, datoEstudiante) {
-
+              Persona.find(estudiante).exec(function (err, auxDatoEstudiante) {
+                var datoEstudiante = auxDatoEstudiante[0]
                 if (datoEstudiante != undefined) {
 
                   async.series([
                     function (callb) {
-
-
                       if (persona.ci_tutor1.length > 0) {
 
                         var tutor1 = recortarNombre(persona.tutor1);
@@ -1888,6 +1886,8 @@ module.exports = {
 
         },
         function (error) {
+          sails.log("-------------------FINAL TODO -----------------------")
+
           // res.send("fin")
         });
 
