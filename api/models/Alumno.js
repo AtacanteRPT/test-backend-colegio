@@ -9,8 +9,8 @@ module.exports = {
     tableName: 'alumno',
     primaryKey: 'id',
     attributes: {
-        updatedAt: false,
-        createdAt:false,
+        // updatedAt: true,
+        // createdAt:true,
         id: {
             type: 'number',
 

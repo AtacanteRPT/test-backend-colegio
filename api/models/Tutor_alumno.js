@@ -10,8 +10,8 @@ module.exports = {
 
 
     attributes: {
-        updatedAt: false,
-        createdAt:false,
+        // updatedAt: false,
+        // createdAt:false,
         idAlumno: {
 
             required:false, 

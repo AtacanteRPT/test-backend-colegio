@@ -11,8 +11,8 @@ module.exports = {
     primaryKey: 'id',
 
     attributes: {
-        updatedAt: false,
-        createdAt: false,
+        // updatedAt: false,
+        // createdAt: false,
         id: {
             type: 'number',
 

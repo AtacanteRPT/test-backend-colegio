@@ -33,6 +33,11 @@ module.exports = {
             required:false, allowNull:true
 
         },
+        gestion: {
+            type: 'number',
+            required:false
+
+        },
         horaEntrada: {
             type: 'string',
             required:false, allowNull:true

@@ -50,17 +50,20 @@ var minsLlegada = 0;
 var minHoraSalidaT = 17;
 var minHoraSalidaM = 9;
 var minsSalida = 0;
-var hoy = new Date();
 
 module.exports = {
-
+  
   mostrar: function (req, res) {
+    var hoy = new Date();
     var baseidentificacion = req.param('baseidentificacion')
     console.log("CLIENTE : ", req.param("baseidentificacion"))
 
     var fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate()
+    var fecha2 = moment().format("YYYY-MM-DD");
 
     sails.log("**********FECHA**************", fecha);
+    sails.log("**********FECHA 2+++++++++++++++" ,fecha2);
+
     horaActual = moment().format('LTS')
 
     actualIdentificacion = baseidentificacion;
@@ -68,6 +71,7 @@ module.exports = {
       identificacion: actualIdentificacion
     }).exec((err, datoPersona) => {
       if (datoPersona == undefined) {
+        auxAlumno = {};
         auxAlumno.nombre = 'NO'
         auxAlumno.paterno = 'ENCONTRADO NINGUN'
         auxAlumno.materno = 'USUARIO CON ESTE CODIGO, registre porfavor'
@@ -103,6 +107,8 @@ module.exports = {
             }
           });
         })
+
+
         var query = "SELECT p.nombre as paralelo, t.nombre as turno, g.nombre as grupo, tmpCurso.nombre , tmpCurso.paterno ,tmpCurso.materno,tmpCurso.img, tmpCurso.id as idAlumno ,tmpCurso.idCurso, tmpCurso.idPersona from paralelo p, turno t, grupo g , (SELECT c.idParalelo, c.idTurno,c.idGrupo, tmpInscribe.nombre, tmpInscribe.img, tmpInscribe.paterno,tmpInscribe.materno, tmpInscribe.idPersona, tmpInscribe.id, tmpInscribe.idCurso from curso c , (SELECT i.idCurso, tmpAlumno.nombre, tmpAlumno.paterno,tmpAlumno.materno, tmpAlumno.img, tmpAlumno.id, tmpAlumno.idPersona from inscribe i , (select p.nombre , p.paterno, p.materno , p.img, p.id as idPersona, a.id from persona p, alumno a where p.identificacion = $1 and p.id = a.idPersona) tmpAlumno where i.idAlumno = tmpAlumno.id) tmpInscribe where c.id = tmpInscribe.idCurso)tmpCurso WHERE p.id = tmpCurso.idParalelo and t.id = tmpCurso.idTurno and g.id = tmpCurso.idGrupo"
         // Persona.query(query, [actualIdentificacion], function (err, consulta) {
 
@@ -131,21 +137,20 @@ module.exports = {
 
           Asistencia.findOne({
             idPersona: resultado.idPersona,
-            fecha: fecha
+            fecha: fecha2
           }).exec((err, datoAsistencia) => {
             console.log('fechaAsistencia', datoAsistencia)
 
-            if (datoAsistencia == null) {
+            if (!datoAsistencia) {
               console.log('paso 2 creando nuevo')
               Asistencia.create({
-                  fecha: fecha,
+                  fecha: fecha2,
                   estado: 'asistió',
                   hora_llegada: horaActual,
                   hora_salida: horaActual,
                   idGestionAcademica: 1,
                   idPersona: resultado.idPersona
                 }
-
               ).fetch().exec((err, datoAsistencia) => {
                 if (err) {
                   return res.serverError(err);
@@ -159,7 +164,7 @@ module.exports = {
                   curso: resultado.grupo + " " + resultado.paralelo,
                   turno: resultado.turno,
                   img: resultado.img,
-                  rol:"alumno"
+                  rol: "alumno"
                 }
 
 
@@ -167,10 +172,13 @@ module.exports = {
                 auxAlumno.hora_salida = moment().format('LTS') + '(no registrado)'
                 auxAlumno.tutores = listaTutores;
 
-                rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar_tutor', { id: datoPersona.id, mensaje: " Hora Llegada : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar_tutor', {
+                  id: datoPersona.id,
+                  mensaje: " Hora Llegada : " + datoAsistencia.hora_salida
+                }).on('complete', function (data3, response3) {
                   // handle response
                   sails.log("se enviò una notificaciòn")
-              });
+                });
                 console.log("nuevo", auxAlumno)
                 return res.send(auxAlumno);
 
@@ -179,10 +187,7 @@ module.exports = {
               console.log('paso 4 actualizando salida')
               sails.log("fecha :", fecha)
               sails.log("resultado idPersona", resultado.idPersona)
-              Asistencia.update({
-                  idPersona: resultado.idPersona,
-                  fecha: fecha
-                }).set({
+              Asistencia.update(datoAsistencia.id).set({
                   hora_salida: horaActual
                 })
                 .fetch().exec((err, datoAsistencia2) => {
@@ -200,16 +205,19 @@ module.exports = {
                     curso: resultado.grupo + " " + resultado.paralelo,
                     turno: resultado.turno,
                     img: resultado.img,
-                    rol:"alumno",
+                    rol: "alumno",
                     hora_llegada: datoAsistencia2[0].hora_llegada,
                     hora_salida: datoAsistencia2[0].hora_salida
                   }
                   auxAlumno.tutores = listaTutores;
 
 
-                  rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar_tutor', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
-                      // handle response
-                      sails.log("se enviò una notificaciòn")
+                  rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar_tutor', {
+                    id: datoPersona.id,
+                    mensaje: " Hora Salida : " + datoAsistencia.hora_salida
+                  }).on('complete', function (data3, response3) {
+                    // handle response
+                    sails.log("se enviò una notificaciòn")
                   });
 
                   res.send(auxAlumno);

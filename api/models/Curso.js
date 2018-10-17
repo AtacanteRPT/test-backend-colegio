@@ -6,42 +6,42 @@
  */
 
 module.exports = {
-    tableName: 'curso',
+  tableName: 'curso',
 
-    attributes: {
-        updatedAt: false,
-        createdAt:false,
-        idParalelo: {
+  attributes: {
+    // updatedAt: false,
+    // createdAt:false,
+    idParalelo: {
 
-            required:false, 
-
-
-
-            model: 'paralelo'
-        },
-        idTurno: {
-
-            required:false, 
+      required: false,
 
 
 
-            model: 'turno'
-        },
-        idGrado: {
+      model: 'paralelo'
+    },
+    idTurno: {
 
-            required:false, 
-
-
-
-            model: 'grado'
-        },
-        idGrupo: {
-
-            required:false, 
+      required: false,
 
 
 
-            model: 'grupo'
-        }
+      model: 'turno'
+    },
+    idGrado: {
+
+      required: false,
+
+
+
+      model: 'grado'
+    },
+    idGrupo: {
+
+      required: false,
+
+
+
+      model: 'grupo'
     }
+  }
 };
