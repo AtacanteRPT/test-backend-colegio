@@ -1657,8 +1657,8 @@ module.exports = {
               estudiante.materno = persona.materno
               // estudiante.nro = persona.nro
 
-              Persona.find(estudiante).exec(function (err, auxDatoEstudiante) {
-                var datoEstudiante = auxDatoEstudiante[0]
+              Persona.findOne(estudiante).exec(function (err, datoEstudiante) {
+                // var datoEstudiante = auxDatoEstudiante[0]
                 if (datoEstudiante != undefined) {
                   sails.log("datoEstudiante",datoEstudiante)
                   async.series([
