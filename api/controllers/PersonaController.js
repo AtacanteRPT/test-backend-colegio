@@ -71,7 +71,7 @@ module.exports = {
     sails.log("BODY", req.body)
 
     var nuevaPersona = {
-      identificacion: req.param('identifiacion'),
+      identificacion: req.param('identificacion'),
       nombre: req.param('nombre'),
       email: req.param('email'),
       paterno: req.param('paterno'),
