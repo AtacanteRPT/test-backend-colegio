@@ -52,7 +52,7 @@ var minHoraSalidaM = 9;
 var minsSalida = 0;
 
 module.exports = {
-  
+
   mostrar: function (req, res) {
     var hoy = new Date();
     var baseidentificacion = req.param('baseidentificacion')
@@ -62,7 +62,7 @@ module.exports = {
     var fecha2 = moment().format("YYYY-MM-DD");
 
     sails.log("**********FECHA**************", fecha);
-    sails.log("**********FECHA 2+++++++++++++++" ,fecha2);
+    sails.log("**********FECHA 2+++++++++++++++", fecha2);
 
     horaActual = moment().format('LTS')
 
@@ -144,14 +144,13 @@ module.exports = {
             if (datoAsistencia == null) {
               console.log('paso 2 creando nuevo')
               Asistencia.create({
-                  fecha: fecha,
-                  estado: 'asistió',
-                  hora_llegada: horaActual,
-                  hora_salida: horaActual,
-                  idGestionAcademica: 1,
-                  idPersona: resultado.idPersona
-                }
-              ).fetch().exec((err, datoAsistencia) => {
+                fecha: fecha,
+                estado: 'asistió',
+                hora_llegada: horaActual,
+                hora_salida: horaActual,
+                idGestionAcademica: 1,
+                idPersona: resultado.idPersona
+              }).fetch().exec((err, datoAsistencia) => {
                 if (err) {
                   return res.serverError(err);
                 }
@@ -270,7 +269,12 @@ module.exports = {
         })
       } else if (datoPersona.rol == "profesor") {
 
-
+        Asistencia.findOne({
+          idPersona: datoPersona.id,
+          fecha: fecha
+        }).exec(function (err, datoAsistencia) {
+          
+        })
         res.send(auxPersona)
 
 
@@ -434,6 +438,33 @@ module.exports = {
         }
       });
     })
+  },
+  historial_docente: function (req, res) {
+
+    var id = req.user.id;
+
+    Asistencia.find({
+      where: {
+        idPersona: id
+      },
+      sort: 'fecha ASC'
+    }).exec((err, datoAsistencias) => {
+
+      res.send(datoAsistencias)
+    });
+  },
+  historial_administrativo: function (req, res) {
+
+    var id = req.user.id;
+console.log("historial administrativo")
+    Asistencia.find({
+      where: {
+        idPersona: id
+      },
+      sort: 'fecha ASC'
+    }).exec((err, datoAsistencias) => {
+      res.send(datoAsistencias)
+    });
   }
 
 };
