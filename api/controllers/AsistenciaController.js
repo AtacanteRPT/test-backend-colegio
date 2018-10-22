@@ -267,19 +267,98 @@ module.exports = {
             }
           });
         })
-      } else if (datoPersona.rol == "profesor") {
-
+      } else if (datoPersona.rol == "administrador" || datoPersona.rol == "profesor") {
         Asistencia.findOne({
           idPersona: datoPersona.id,
           fecha: fecha
-        }).exec(function (err, datoAsistencia) {
-          
+        }).exec((err, datoAsistencia) => {
+          console.log('fechaAsistencia', datoAsistencia)
+
+          if (datoAsistencia == null) {
+            console.log('paso 2 creando nuevo')
+            Asistencia.create({
+              fecha: fecha,
+              estado: 'asistió',
+              hora_llegada: horaActual,
+              hora_salida: horaActual,
+              idGestionAcademica: 1,
+              idPersona: datoPersona.id
+            }).fetch().exec((err, datoAsistencia) => {
+              if (err) {
+                return res.serverError(err);
+              }
+
+              auxAlumno = {
+                identificacion: actualIdentificacion,
+                materno: datoPersona.materno,
+                paterno: datoPersona.paterno,
+                nombre: datoPersona.nombre,
+                curso: "",
+                turno: "",
+                img: datoPersona.img,
+                rol: "alumno",
+                tutores : []
+              }
+
+
+              auxAlumno.hora_llegada = moment().format('LTS')
+              auxAlumno.hora_salida = moment().format('LTS') + '(no registrado)'
+
+              // rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar_tutor', {
+              //   id: datoPersona.id,
+              //   mensaje: " Hora Llegada : " + datoAsistencia.hora_salida
+              // }).on('complete', function (data3, response3) {
+              //   // handle response
+              //   sails.log("se enviò una notificaciòn")
+              // });
+              console.log("nuevo", auxAlumno)
+              return res.send(auxAlumno);
+
+            });
+          } else {
+            console.log('paso 4 actualizando salida')
+            sails.log("fecha :", fecha)
+            sails.log("resultado idPersona", resultado.idPersona)
+            Asistencia.update(datoAsistencia.id).set({
+                hora_salida: horaActual
+              })
+              .fetch().exec((err, datoAsistencia2) => {
+                if (err) {
+                  return res.serverError(err);
+                }
+
+                console.log('actualizado', datoAsistencia2)
+
+                auxAlumno = {
+                  identificacion: actualIdentificacion,
+                  materno: datoPersona.materno,
+                  paterno: datoPersona.paterno,
+                  nombre: datoPersona.nombre,
+                  curso: "",
+                  turno: "",
+                  img: datoPersona.img,
+                  rol: "alumno",
+                  hora_llegada: datoAsistencia2[0].hora_llegada,
+                  hora_salida: datoAsistencia2[0].hora_salida,
+                  tutores:[]
+                }
+
+
+                // rest.postJson(DOMINIO_A2HOSTING + 'persona/notificar_tutor', {
+                //   id: datoPersona.id,
+                //   mensaje: " Hora Salida : " + datoAsistencia.hora_salida
+                // }).on('complete', function (data3, response3) {
+                //   // handle response
+                //   sails.log("se enviò una notificaciòn")
+                // });
+
+                res.send(auxAlumno);
+              })
+
+          }
+
+
         })
-        res.send(auxPersona)
-
-
-      } else if (datoPersona.rol == "administrador") {
-        res.send(datoPersona)
       }
 
     })
@@ -456,7 +535,7 @@ module.exports = {
   historial_administrativo: function (req, res) {
 
     var id = req.user.id;
-console.log("historial administrativo")
+    console.log("historial administrativo")
     Asistencia.find({
       where: {
         idPersona: id
