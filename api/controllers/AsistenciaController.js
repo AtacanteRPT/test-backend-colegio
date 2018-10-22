@@ -318,7 +318,7 @@ module.exports = {
           } else {
             console.log('paso 4 actualizando salida')
             sails.log("fecha :", fecha)
-            sails.log("resultado idPersona", resultado.idPersona)
+            // sails.log("resultado idPersona", resultado.idPersona)
             Asistencia.update(datoAsistencia.id).set({
                 hora_salida: horaActual
               })
