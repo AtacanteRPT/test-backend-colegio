@@ -135,7 +135,7 @@ module.exports = {
 
 
   actualizarPassword: function (req, res) {
-    persona.find({
+    Persona.find({
       rol: "tutor"
     }).exec(function (err, datoPersonas) {
 
