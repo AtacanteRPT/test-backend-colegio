@@ -133,6 +133,34 @@ function adicionar_tutor_alumno(tutor, alumno) {
 
 module.exports = {
 
+
+  actualizarPassword: function (req, res) {
+    persona.find({
+      rol: "tutor"
+    }).exec(function (err, datoPersonas) {
+
+      datoPersonas.forEach(element => {
+
+
+        var nuevoPassword = element.identificacion
+        bcrypt.genSalt(10, function (err, salt) {
+          bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
+            Usuario.update({idPersona:element.id}).set({
+              username: element.identificacion,
+              password: hash
+            }).exec(function (err, datoUsuario) {
+              console.log("resetado",element)
+            })
+          });
+
+        })
+
+      });
+      res.send("BUCLE TERMINADO")
+
+    })
+  },
+
   actualizarPadres: function (req, res) {
     var csvFilePath = '../.././assets/cvs/kinder-prekinder_amerinst_tarde.csv'
 
@@ -1648,10 +1676,10 @@ module.exports = {
             b = 1,
             c = 1,
             d = 1;
-            sails.log("nuevaspersonas.length :",nuevasPersonas.length)
+          sails.log("nuevaspersonas.length :", nuevasPersonas.length)
           async.eachSeries(nuevasPersonas, function (persona, cb) {
 
-            sails.log("PERSONA DEDE CSV : ", persona)
+              sails.log("PERSONA DEDE CSV : ", persona)
               var estudiante = {}
               estudiante.nombre = persona.nombre
               estudiante.paterno = persona.paterno
@@ -1661,7 +1689,7 @@ module.exports = {
               Persona.findOne(estudiante).exec(function (err, datoEstudiante) {
                 // var datoEstudiante = auxDatoEstudiante[0]
                 if (datoEstudiante != undefined) {
-                  sails.log("datoEstudiante",datoEstudiante)
+                  sails.log("datoEstudiante", datoEstudiante)
                   async.series([
                     function (callb1) {
                       if (persona.ci_tutor1.length > 0) {
@@ -2697,21 +2725,21 @@ module.exports = {
     Inscribe.find({
       idCurso: 31
     }).populate('idAlumno').exec(function (err, inscripciones) {
-        var alumnosCurso = [];
+      var alumnosCurso = [];
 
-        async.forEach(inscripciones, function (inscripcion, cb) {
-          Inscribe.destroy(inscripcion.id).exec(function(err,datoInscribe){
-            console.log("eliminado", datoInscribe)
-          })
-        }, function (error) {
+      async.forEach(inscripciones, function (inscripcion, cb) {
+        Inscribe.destroy(inscripcion.id).exec(function (err, datoInscribe) {
+          console.log("eliminado", datoInscribe)
+        })
+      }, function (error) {
 
-          if (error) return res.negotiate(error);
-          sails.log("tamaño", inscripciones.length)
-          sails.log("es curso ", inscripciones[0].idCurso)
-          return res.send(alumnosCurso)
-        });
+        if (error) return res.negotiate(error);
+        sails.log("tamaño", inscripciones.length)
+        sails.log("es curso ", inscripciones[0].idCurso)
+        return res.send(alumnosCurso)
+      });
 
-      })
+    })
   }
 
 };
