@@ -21,6 +21,7 @@ var qr = require('qr-image');
 var stringify = require('csv-stringify');
 var unirest = require('unirest');
 
+const bcrypt = require('bcrypt-nodejs');
 
 
 
