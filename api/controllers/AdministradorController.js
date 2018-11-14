@@ -139,6 +139,10 @@ module.exports = {
     Persona.find({
       rol: "tutor"
     }).exec(function (err, datoPersonas) {
+
+      if (err) {
+        return res.serverError(err)
+      };
       sails.log("LENGTH :",datoPersonas.length)
       datoPersonas.forEach(element => {
 
