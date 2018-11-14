@@ -50,6 +50,8 @@ var minsLlegada = 0;
 var minHoraSalidaT = 17;
 var minHoraSalidaM = 9;
 var minsSalida = 0;
+var moment_time = require("moment-timezone") 
+
 
 module.exports = {
 
@@ -64,7 +66,8 @@ module.exports = {
     sails.log("**********FECHA**************", fecha);
     sails.log("**********FECHA 2+++++++++++++++", fecha2);
 
-    horaActual = moment().format('LTS')
+    // horaActual = moment().format('LTS')
+   horaActual = moment_time.tz('America/La_Paz').format('LTS')
 
     actualIdentificacion = baseidentificacion;
     Persona.findOne({
