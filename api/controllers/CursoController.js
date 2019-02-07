@@ -194,7 +194,7 @@ module.exports = {
 
         Curso.find().exec((err, datoCursos) => {
             if (err) { return res.serverError(err); }
-            sails.log("TOTAL CURSO :: ",datoCursos.length)
+            sails.log("TOTAL CURSO :: ", datoCursos.length)
 
             Turno.findOne(req.param('id')).exec((err, turno) => {
                 if (err) { return res.serverError(err); }
@@ -368,7 +368,7 @@ module.exports = {
 
         var idTurno = req.param("id")
 
-        rest.get(DOMINIO_A2HOSTING +'curso/mostrar_turno2/' + idTurno).on('complete', function(result) {
+        rest.get(DOMINIO_A2HOSTING + 'curso/mostrar_turno2/' + idTurno).on('complete', function(result) {
                 sails.log(result.grados[2])
                 auxLista = result;
                 var auxGrados = []
@@ -388,8 +388,8 @@ module.exports = {
                             if (err) { return res.serverError(err); }
 
                             sails.log("Nombre :", datoCursos)
-                            if (datoCursos.length >0 ) {
-                                sails.log("Distinto de nulo :" , datoCursos.length)
+                            if (datoCursos.length > 0) {
+                                sails.log("Distinto de nulo :", datoCursos.length)
                                 var paralelos = []
 
                                 async.each(datoCursos, function(curso, cb3) {
@@ -446,6 +446,29 @@ module.exports = {
             if (err) { return res.serverError(err); }
 
         })
+
+    },
+    migrarCurso: function(req, res) {
+
+        var idCurso2018 = req.param('antes');
+        var idCurso2019 = req.param('despues');
+        Inscribe.find({ idCurso: idCurso2018, idGestionAcademica: 1 }).exec((err, datoInscripciones) => {
+            if (err) { return res.serverError(err); }
+            async.each(datoInscripciones, function(inscripcion, cb) {
+
+                Inscribe.create({ idGestionAcademica: 2, idCurso: idCurso2019, idAlumno: inscripcion.idAlumno }).fetch().exec(function(err, datoInscripcion) {
+                    console.log("CURSO ACTUALIZADO", datoInscripcion)
+                    cb()
+                });
+
+            }, function(error) {
+
+                sails.log("-------------------FINAL LISTA -----------------------")
+                return res.send("Todo CAMBIO EL CURSO")
+            });
+
+        });
+
 
     }
 

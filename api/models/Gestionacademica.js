@@ -17,35 +17,38 @@ module.exports = {
         },
         tipo: {
             type: 'string',
-            required:false, allowNull:true
+            required: false,
+            allowNull: true
 
 
         },
         fecha_inicio: {
-            type: 'string',
+            type: 'ref',
             columnType: 'date',
-            required:false, allowNull:true
+            required: false,
 
         },
         fecha_fin: {
-            type: 'string',
+            type: 'ref',
             columnType: 'date',
-            required:false, allowNull:true
+            required: false,
 
         },
         gestion: {
             type: 'number',
-            required:false
+            required: false
 
         },
         horaEntrada: {
             type: 'string',
-            required:false, allowNull:true
+            required: false,
+            allowNull: true
 
         },
         horaSalida: {
             type: 'string',
-            required:false, allowNull:true
+            required: false,
+            allowNull: true
 
         },
     }
